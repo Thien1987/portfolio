@@ -783,3 +783,16 @@ html{scroll-padding-top:calc(var(--topbar-height,76px) + 12px)}
 .photo-frame{overflow:visible}
 .photo-sticker{z-index:2;right:-22px}
 @media(max-width:560px){.photo-sticker{right:-16px}}
+/* Keep the mobile project grid inside the viewport; cards scroll only in their own rail. */
+@media(max-width:560px){.project-showcase{grid-template-columns:minmax(0,1fr)}.project-stage{width:100%;max-width:100%;min-width:0}.project-slider{width:100%;max-width:100%;min-width:0}}
+
+/* Make prototype and screen previews use the actual mobile viewport and center their contents. */
+.image-lightbox{inset:0;width:100vw;height:100dvh;box-sizing:border-box}
+@media(max-width:600px){
+  .image-lightbox{inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;padding:calc(64px + env(safe-area-inset-top,0px)) 12px calc(18px + env(safe-area-inset-bottom,0px));box-sizing:border-box}
+  .image-lightbox .lightbox-body{width:100%;height:100%;min-height:0;align-items:center;justify-content:center}
+  .image-lightbox.workpal-prototype-overlay{padding:calc(58px + env(safe-area-inset-top,0px)) 12px calc(14px + env(safe-area-inset-bottom,0px))}
+  .workpal-prototype-overlay .lightbox-body{height:100%;min-height:0}
+  .image-lightbox.prototype-app-overlay{padding:0}
+  .prototype-app-overlay .lightbox-body,.prototype-app-overlay .lightbox-images.prototype-app-frame,.prototype-app-frame iframe{height:100dvh}
+}

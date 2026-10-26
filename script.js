@@ -1416,7 +1416,7 @@ document.addEventListener('click', (event) => {
   let launch;
   if (path.endsWith('/WorkPal/index.html')) launch = ['workpal'];
   else if (path.endsWith('/AirScout/index.html')) launch = ['AirScout', new URL('AirScout/index.html?preview=dashboard', location.href).href];
-  else if (path.endsWith('/AI Project Dashboard/dist/index.html')) launch = ['Margin', new URL('AI Project Dashboard/dist/index.html?portfolioPreview=1&previewView=timeline', location.href).href];
+  else if (path.endsWith('/AI Project Dashboard/dist/index.html')) launch = ['Margin', new URL('AI Project Dashboard/dist/index.html?portfolioPreview=1&previewView=timeline&mobileViewport=1', location.href).href];
   if (!launch) return;
   event.preventDefault();
   if (launch[0] === 'workpal') openWorkPalPrototypeOverlay();
