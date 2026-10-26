@@ -1349,7 +1349,7 @@ function renderExpandedSlide() {
   } else if (slide.type === 'workpal') {
     expandedView = document.createElement('div');
     expandedView.className = 'agent-expanded-preview workpal-expanded-preview';
-    expandedView.innerHTML = `${renderDevice(slide.files[0], 'workpal', 'lightbox-device')}<a class="button dark prototype-launch" href="WorkPal/index.html" target="_blank" rel="noreferrer">Open prototype <span>↗</span></a>`;
+    expandedView.innerHTML = renderDevice(slide.files[0], 'workpal', 'lightbox-device');
     lightboxImages.classList.add('is-phone');
   } else {
     expandedView = document.createElement('div');
@@ -1370,6 +1370,30 @@ function renderExpandedSlide() {
   fitPlannerScreens(imageLightbox);
   fitWorkPalScreens(imageLightbox);
 }
+
+function openWorkPalPrototypeOverlay() {
+  if (imageLightbox.open) return;
+  expandedSlides = [{ type: 'workpal', files: ['overview'], label: 'WorkPal · Interactive prototype' }];
+  expandedSlideIndex = 0;
+  document.documentElement.classList.add('workpal-overlay-open');
+  imageLightbox.classList.add('workpal-prototype-overlay');
+  imageLightbox.classList.remove('has-multiple');
+  lightboxThumbnails.replaceChildren();
+  document.querySelector('.lightbox-prev').hidden = true;
+  document.querySelector('.lightbox-next').hidden = true;
+  renderExpandedSlide();
+  imageLightbox.showModal();
+  requestAnimationFrame(() => fitWorkPalScreens(imageLightbox));
+  document.querySelector('.lightbox-close').focus();
+}
+
+document.addEventListener('click', (event) => {
+  const link = event.target.closest('a[href]');
+  if (!link || !/^WorkPal\/index\.html(?:$|[?#])/.test(link.getAttribute('href'))) return;
+  event.preventDefault();
+  openWorkPalPrototypeOverlay();
+});
+imageLightbox.addEventListener('close', () => { imageLightbox.classList.remove('workpal-prototype-overlay'); document.documentElement.classList.remove('workpal-overlay-open'); });
 
 function setExpandedSlide(index) {
   if (!expandedSlides.length) return;
