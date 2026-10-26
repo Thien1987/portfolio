@@ -314,6 +314,8 @@ const lightboxImages = document.querySelector('#lightbox-images');
 const lightboxTitle = document.querySelector('#lightbox-title');
 const lightboxThumbnails = document.querySelector('#lightbox-thumbnails');
 let activeCaseProjectIndex = 0;
+let caseStudyReturnScrollY = 0;
+let caseStudyReturnTitle = document.title;
 let expandedSlides = [];
 let expandedSlideIndex = 0;
 
@@ -942,80 +944,18 @@ function caseImageSlot(title, description) {
   return `<div class="case-artifact-placeholder" role="note"><b>${title}</b><small>${description}</small></div>`;
 }
 
-function openCaseStudy(index) {
-  activeCaseProjectIndex = index;
-  const project = projects[index];
-  const screens = projectScreens[index];
-  const marketReference = projectReferences[index];
-  const challenge = project.challenge || project.brief || '[REPLACE: concise problem statement]';
-  const summary = project.brief || challenge;
-  const roleSummary = project.role || '[REPLACE: role and contribution]';
-  const designLens = project.design || '[REPLACE: summarize the design approach you actually used]';
-  const productLens = project.product || '[REPLACE: explain the product decision and trade-off]';
-  const roadblock = project.roadblock || {};
-  const designSteps = project.designerSteps || [];
-  const pmSteps = project.pmSteps || [];
-  const stepsMarkup = (steps) => steps.length
-    ? `<ol class="case-steps">${steps.map(([title, body]) => `<li><b>${title}</b><p>${body}</p></li>`).join('')}</ol>`
-    : '<p class="case-replace">[REPLACE: add the steps you took and why.]</p>';
-  const screenMarkup = screens.type === 'sidebarPair'
-    ? `<div class="case-screen-item">${renderDevice(screens.files, screens.type, 'case-gallery-device')}<span>LIGHT & DARK MODES</span></div>`
-    : screens.files.map((file, screenIndex) => `<div class="case-screen-item">${renderDevice(file, screens.type, 'case-gallery-device')}<span>${screens.type === 'agent' ? `AIRSCOUT · ${file}` : screens.type === 'workpal' ? `WORKPAL · ${file}` : `SCREEN ${String(screenIndex + 1).padStart(2, '0')}`}</span></div>`).join('');
-
-  caseContent.innerHTML = `
-    <div class="case-reading-progress" role="progressbar" aria-label="Case study reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
-    <header class="case-study-summary" id="case-summary">
-      <div class="case-summary-copy"><span class="case-kicker">${project.category || 'PRODUCT DESIGN'} · CASE STUDY</span><h2 id="case-title">${project.title}</h2><p>${summary} My role was ${roleSummary}. Process: [REPLACE: summarize the discovery, prioritization, and iteration you actually completed]. <strong>Outcome:</strong> [REPLACE: add a verified result, or state that this is a concept and what you would validate.]</p>${project.prototypeHref ? `<a class="button dark prototype-launch" href="${project.prototypeHref}" aria-haspopup="dialog">Open prototype <span>↗</span></a>` : ''}</div>
-      <div class="case-feature-screen">${renderDevice(screens.type === 'sidebarPair' ? screens.files : screens.files[0], screens.type, 'case-device')}</div>
-    </header>
-      <nav class="case-section-nav" aria-label="Case study sections"><a href="#case-problem">Problem</a><a href="#case-research">Research</a><a href="#case-define">Approach</a><a href="#case-decide">Decisions</a><a href="#case-test">Next steps</a><a href="#case-craft">Design</a><a href="#case-reflection">Reflection</a></nav>
-    <article class="case-study-body">
-      <section class="case-study-section" id="case-problem" data-case-section><span class="case-section-index">01 / PROBLEM FRAMING</span><h3>I focused the work on the barrier behind the visible task.</h3><div class="case-two-col"><div><h4>Problem statement</h4><p>${challenge}</p><h4>Target users</h4><p>[REPLACE: name the people this project served and the evidence behind that choice.]</p></div><div><h4>Constraints</h4><p>[REPLACE: solo or team setup, deadline, technical or business limits, and what those limits changed.]</p><h4>Success hypothesis</h4><p>[REPLACE: if we change X, then Y should improve because Z. These are measures to validate, not results.]</p><div class="case-note"><b>What I didn’t know at the start</b><p>[REPLACE: state the key uncertainty that shaped your first research or design move.]</p></div></div></div></section>
-      <section class="case-study-section" id="case-research" data-case-section><span class="case-section-index">02 / RESEARCH</span><h3>I chose methods to answer specific questions, not to fill a process checklist.</h3><p class="case-section-lead">Document only the research you actually did. Keep the sample, quotes, and artifacts traceable to their source.</p><div class="case-method-grid">${[1,2,3].map((number) => `<article class="case-method-card"><span>METHOD 0${number} · [REPLACE]</span><h4>[REPLACE: method]</h4><p><b>Why I chose it:</b> [REPLACE: what this method could reveal.]</p><p><b>Question answered:</b> [REPLACE: the question you set out to answer.]</p><p><b>Sample:</b> [REPLACE: number and participant criteria]</p><blockquote>“[REPLACE: exact, anonymized participant quote.]”</blockquote></article>`).join('')}</div><div class="case-artifact-grid">${caseImageSlot('Research synthesis', 'Placeholder for a real research synthesis image such as an affinity map. Replace with the artifact and accurate alt text.')}${caseImageSlot('Supporting evidence', 'Placeholder for a real research artifact such as interview notes or a competitor audit. Replace with the artifact and accurate alt text.')}</div><div class="case-insight-grid"><article class="case-insight-card"><span>INSIGHT 01</span><p>We learned <b>[REPLACE: evidence-backed insight]</b>, so we should <b>[REPLACE: design or product implication]</b>.</p></article><article class="case-insight-card"><span>INSIGHT 02</span><p>We learned <b>[REPLACE: evidence-backed insight]</b>, so we should <b>[REPLACE: design or product implication]</b>.</p></article></div></section>
-      <section class="case-study-section" id="case-define" data-case-section><span class="case-section-index">03 / DEFINE</span><h3>I narrowed the scope to the users and jobs that shaped the experience.</h3><div class="case-two-col"><div><h4>User segments or personas</h4><p>[REPLACE: include only segments or personas that changed a design or prioritization decision.]</p><h4>Jobs to be done</h4><p>When <b>[REPLACE: situation]</b>, I want to <b>[REPLACE: motivation]</b>, so I can <b>[REPLACE: outcome]</b>.</p></div><div><h4>How might we</h4><p class="case-prompt">How might we help <b>[REPLACE: target user]</b> <b>[REPLACE: make progress on the core job]</b> while <b>[REPLACE: respecting the most important constraint]</b>?</p><div class="case-priority-grid"><div><b>What I focused on</b><p>[REPLACE: chosen user need or flow, and why it mattered.]</p></div><div><b>What I deliberately left out</b><p>[REPLACE: de-scoped work and the trade-off behind it.]</p></div></div></div></div><div class="case-artifact-grid">${caseImageSlot('User flow or journey', 'Placeholder for a real user flow or journey map. Add an accurate alt text summary.')}${caseImageSlot('Information architecture', 'Placeholder for a real sitemap or card-sort artifact. Add an accurate alt text summary.')}</div></section>
-      <section class="case-study-section" id="case-decide" data-case-section><span class="case-section-index">04 / EXPLORE & DECIDE</span><h3>I made the important trade-off visible before polishing the interface.</h3><div class="case-artifact-grid">${caseImageSlot('Early sketches or wireframes', 'Placeholder for real low-fidelity sketches or wireframes, including an option you rejected.')}${caseImageSlot('Sitemap or card sort', 'Placeholder for an information architecture artifact that informed this decision.')}</div><article class="case-decision-card"><div class="case-decision-heading"><span>DECISION · [REPLACE: NAME THE CHOICE]</span><p>${roadblock.challenge || '[REPLACE: describe the constraint or trade-off that mattered.]'}</p></div><div class="case-decision-grid"><div><b>Decision</b><p>${roadblock.design || '[REPLACE: what you chose and why.]'}</p><small>[REPLACE: confirm this reflects the decision you actually made.]</small></div><div><b>Alternatives considered</b><p>[REPLACE: options you considered, including the rejected direction.]</p></div><div><b>Reasoning</b><p>[REPLACE: explain the trade-off and how it connected to the user need.]</p></div><div><b>Evidence</b><p>[REPLACE: link the decision to a real research finding, constraint, or test.]</p></div></div></article><div class="case-lens-wrap"><div class="case-role-head"><div><span class="case-section-index">TWO LENSES ON THE SAME PROBLEM</span><h4>Design craft and product judgment</h4></div><div class="role-tabs" role="tablist" aria-label="Choose a role lens"><button type="button" class="role-tab active" role="tab" aria-selected="true" data-role="designer">Product Designer</button><button type="button" class="role-tab" role="tab" aria-selected="false" data-role="manager">Product Manager</button></div></div><div class="role-panel" id="role-panel"></div></div></section>
-      <section class="case-study-section" id="case-test" data-case-section><span class="case-section-index">05 / TEST & ITERATE</span><h3>I used testing to challenge the riskiest assumption in the flow.</h3><div class="case-two-col"><div><h4>Test method</h4><p>[REPLACE: moderated or unmoderated; tool; date; number and profile of participants.]</p><h4>Tasks</h4><p>[REPLACE: realistic tasks participants attempted and what each task tested.]</p></div><div><h4>Measures</h4><p>Task success: [REPLACE] · Time on task: [REPLACE] · Confidence or errors: [REPLACE]</p><h4>What changed</h4><p>[REPLACE: describe the design change and the evidence that led to it.]</p><h4>What I couldn’t fix and why</h4><p>[REPLACE: limitation, dependency, or trade-off that remained.]</p></div></div><div class="case-before-after"><article><span>BEFORE</span>${caseImageSlot('Earlier version', 'Placeholder for the original screen before iteration. Replace with the real screen and descriptive alt text.')}</article><article><span>AFTER</span>${caseImageSlot('Updated version', 'Placeholder for the updated screen after iteration. Replace with the real screen and descriptive alt text.')}</article></div></section>
-      <section class="case-study-section" id="case-craft" data-case-section><span class="case-section-index">06 / FINAL DESIGN & CRAFT</span><h3>The final interface should make the chosen path and important states clear.</h3><p class="case-section-lead">These are the available portfolio screens. Add annotations that explain the design decision each screen demonstrates.</p><div class="case-screen-gallery">${screenMarkup}${screens.type === 'agent' ? `<div class="case-screen-item">${renderDevice(null, 'agentMobile', 'case-gallery-mobile-device')}<span>AIRSCOUT · MOBILE</span></div>` : ''}</div><div class="case-craft-grid"><div><h4>Design system snapshot</h4><p>Type: [REPLACE] · Color: [REPLACE] · Spacing: [REPLACE] · Components: [REPLACE]</p></div><div><h4>Accessibility</h4><p>Contrast: [REPLACE] · Focus states: [REPLACE] · Touch targets: [REPLACE]</p></div><div><h4>Responsive behavior</h4><p>[REPLACE: explain what changes across mobile, tablet, and desktop.]</p></div><div><h4>Edge cases</h4><p>Empty: [REPLACE] · Error: [REPLACE] · Loading: [REPLACE]</p></div></div></section>
-      <section class="case-study-section case-outcome-section" id="case-outcome" data-case-section><span class="case-section-index">07 / OUTCOME & REFLECTION</span><h3>I’ll distinguish what shipped and changed from what still needs validation.</h3><div class="case-two-col"><div><h4>Outcome</h4><p>[REPLACE: verified result and source. For concept work, say that there is no shipped outcome and describe what you would measure.]</p><div class="case-note"><b>Measures to report or validate</b><p>${project.metric || '[REPLACE: choose a measure tied to the project outcome.]'} <small>These are candidate measures from the current project notes, not reported results. Replace or confirm them before publishing.</small></p></div></div><div><h4>What I’d do differently</h4><p>[REPLACE: what you would change in your process, decision, or next iteration—and why.]</p><h4>Product perspective</h4><p>${productLens}</p><small>[REPLACE: distinguish a proposed product approach from work you personally completed.]</small></div></div></section>
-      <details class="case-appendix"><summary>Appendix · deeper artifacts and process notes</summary><div class="case-appendix-content"><p>[REPLACE: add links to research, detailed flows, design specs, or supporting documentation. Remove sensitive information.]<br>Portfolio tech stack: [REPLACE: HTML/CSS/JavaScript or actual stack.]</p></div></details>
-      <footer class="case-footer"><span>Have a related challenge?</span><a class="button dark" href="#contact">Let’s talk <span>↗</span></a></footer>
-    </article>`;
-
-  function setRole(role) {
-    const steps = role === 'designer' ? designSteps : pmSteps;
-    const body = role === 'designer' ? designLens : productLens;
-    caseContent.querySelectorAll('.role-tab').forEach((button) => {
-      const active = button.dataset.role === role;
-      button.classList.toggle('active', active);
-      button.setAttribute('aria-selected', String(active));
-    });
-    caseContent.querySelector('#role-panel').innerHTML = `<div class="role-intro"><p>${body}</p><small>[REPLACE: confirm this describes work you personally completed; label proposals as proposals.]</small></div>${stepsMarkup(steps)}`;
-  }
-  setRole('designer');
-  caseContent.querySelectorAll('.role-tab').forEach((button) => button.addEventListener('click', () => setRole(button.dataset.role)));
-  caseContent.querySelector('.role-tabs')?.addEventListener('keydown', (event) => {
-    if (!['ArrowLeft', 'ArrowRight'].includes(event.key)) return;
-    const tabs = [...caseContent.querySelectorAll('.role-tab')];
-    const activeIndex = tabs.indexOf(document.activeElement);
-    if (activeIndex < 0) return;
-    event.preventDefault();
-    const step = event.key === 'ArrowRight' ? 1 : -1;
-    const next = tabs[(activeIndex + step + tabs.length) % tabs.length];
-    next.focus();
-    next.click();
-  });
-  caseContent.scrollTop = 0;
-  caseDialog.showModal();
-  fitPhoneScreens(caseContent);
-  fitDesktopScreens(caseContent);
-  fitPlannerScreens(caseContent);
-  fitWorkPalScreens(caseContent);
-  updateCaseStudyNavigation();
-}
-
 // Project case study renderer, with project-specific context and evidence limits.
-function openCaseStudy(index) {
+function openCaseStudy(index, { fromHistory = false } = {}) {
   activeCaseProjectIndex = index;
+  if (!fromHistory && !caseDialog.open) {
+    const previousState = history.state && typeof history.state === 'object' ? history.state : {};
+    caseStudyReturnScrollY = window.scrollY;
+    caseStudyReturnTitle = document.title;
+    history.pushState({ ...previousState, portfolioCaseStudyIndex: index, portfolioCaseStudyReturnY: caseStudyReturnScrollY, portfolioCaseStudyReturnTitle: caseStudyReturnTitle }, '', location.href);
+  } else if (fromHistory) {
+    caseStudyReturnScrollY = Number(history.state?.portfolioCaseStudyReturnY) || caseStudyReturnScrollY;
+    caseStudyReturnTitle = history.state?.portfolioCaseStudyReturnTitle || caseStudyReturnTitle;
+  }
   const project = projects[index];
   const screens = projectScreens[index];
   const marketReference = projectReferences[index];
@@ -1189,6 +1129,11 @@ function openCaseStudy(index) {
       <footer class="case-footer"><span>Have a related challenge?</span><a class="button dark" href="#contact">Let’s talk <span>↗</span></a></footer>
     </article>`;
 
+  document.title = `${project.title} - Case Study | Thien Nguyen`;
+  caseContent.querySelectorAll('.case-section-nav a').forEach((link) => link.addEventListener('click', (event) => {
+    event.preventDefault();
+    caseContent.querySelector(link.hash)?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+  }));
   function setRole(role) {
     const items = role === 'designer' ? designerSteps : managerSteps;
     const body = pageRedesign
@@ -1546,9 +1491,26 @@ caseContent.addEventListener('keydown', (event) => {
   openExpandedScreens(device);
 });
 
-document.querySelector('.case-close').addEventListener('click', () => caseDialog.close());
+function returnFromCaseStudy() {
+  if (history.state?.portfolioCaseStudyIndex === activeCaseProjectIndex) history.back();
+  else caseDialog.close();
+}
+document.querySelector('.case-close').addEventListener('click', returnFromCaseStudy);
+caseDialog.addEventListener('cancel', (event) => { event.preventDefault(); returnFromCaseStudy(); });
 caseDialog.addEventListener('click', (event) => {
-  if (event.target === caseDialog) caseDialog.close();
+  if (event.target === caseDialog) returnFromCaseStudy();
+});
+window.addEventListener('popstate', (event) => {
+  const caseIndex = event.state?.portfolioCaseStudyIndex;
+  if (Number.isInteger(caseIndex)) {
+    openCaseStudy(caseIndex, { fromHistory: true });
+    return;
+  }
+  if (caseDialog.open) {
+    caseDialog.close();
+    document.title = caseStudyReturnTitle;
+    requestAnimationFrame(() => window.scrollTo(0, caseStudyReturnScrollY));
+  }
 });
 
 document.querySelector('.lightbox-close').addEventListener('click', () => imageLightbox.close());

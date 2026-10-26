@@ -784,3 +784,14 @@ html{scroll-padding-top:calc(var(--topbar-height,76px) + 12px)}
 .topbar nav::after{content:"";position:absolute;left:0;bottom:3px;width:var(--nav-indicator-width,0px);height:2px;background:var(--orange);transform:translateX(var(--nav-indicator-x,0px));opacity:0;transition:transform .26s cubic-bezier(.2,.75,.25,1),width .26s cubic-bezier(.2,.75,.25,1),opacity .16s ease;pointer-events:none}
 .topbar nav[data-has-active-section="true"]::after{opacity:1}
 .topbar nav a::after{content:none!important}
+
+/* Case studies open as a full-screen page with a persistent return control. */
+.case-dialog{position:fixed;inset:0;margin:0;width:100vw;height:100vh;height:100dvh;max-width:none;max-height:none;padding:0;border:0;border-radius:0;background:var(--paper);box-shadow:none;overflow:hidden!important}
+.case-dialog::backdrop{background:var(--paper);backdrop-filter:none}
+.case-dialog #case-content{width:100%;height:100%;max-height:none;margin:0;padding:calc(64px + env(safe-area-inset-top,0px)) 0 0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:rgba(85,86,78,.26) transparent}
+.case-dialog .case-close{position:fixed;inset:0 0 auto;z-index:40;display:flex;align-items:center;justify-content:flex-start;width:100%;height:calc(64px + env(safe-area-inset-top,0px));margin:0;padding:env(safe-area-inset-top,0px) clamp(20px,5vw,64px) 0;border:0;border-bottom:1px solid var(--line);border-radius:0;background:rgba(244,241,234,.97);color:var(--ink);font:600 14px var(--sans);text-align:left;cursor:pointer;backdrop-filter:blur(14px)}
+.case-dialog .case-close::first-letter{color:var(--orange)}
+.case-dialog .case-close:focus-visible{outline:3px solid var(--orange);outline-offset:-4px}
+.case-dialog .case-reading-progress{top:calc(64px + env(safe-area-inset-top,0px))}
+.case-dialog .case-section-nav{top:calc(67px + env(safe-area-inset-top,0px))}
+@media(max-width:650px){.case-dialog #case-content{padding-top:calc(58px + env(safe-area-inset-top,0px))}.case-dialog .case-close{height:calc(58px + env(safe-area-inset-top,0px));font-size:13px}.case-dialog .case-reading-progress{top:calc(58px + env(safe-area-inset-top,0px))}.case-dialog .case-section-nav{top:calc(61px + env(safe-area-inset-top,0px))}}
