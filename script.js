@@ -375,11 +375,11 @@ function renderDevice(file, type, className = '') {
   }
   if (type === 'agent') {
     const preview = typeof file === 'string' ? file : 'welcome';
-    return `<span class="desktop-device agent-device ${className}"${expandable}><span class="desktop-chrome"><i></i><i></i><i></i><b>AirScout · ${preview}</b></span><span class="desktop-display agent-display"><iframe src="AirScout/index.html?preview=${encodeURIComponent(preview)}" title="AirScout ${preview} page preview" tabindex="-1" loading="lazy"></iframe></span></span>`;
+    return `<span class="desktop-device agent-device ${className}"${expandable}><span class="desktop-chrome"><i></i><i></i><i></i><b>AirScout · ${preview}</b></span><span class="desktop-display agent-display"><iframe src="AirScout/index.html?preview=${encodeURIComponent(preview)}&amp;release=booking-confirmed-check-v1" title="AirScout ${preview} page preview" tabindex="-1" loading="lazy"></iframe></span></span>`;
   }
   if (type === 'agentMobile') {
     const preview = typeof file === 'string' ? file : 'dashboard';
-    return `<span class="project-device agent-mobile-device ${className}"${expandable}><span class="device-island"></span><span class="device-screen"><iframe src="AirScout/index.html?preview=${encodeURIComponent(preview)}" title="AirScout ${preview} mobile page preview" tabindex="-1" loading="lazy"></iframe></span><span class="device-home"></span></span>`;
+    return `<span class="project-device agent-mobile-device ${className}"${expandable}><span class="device-island"></span><span class="device-screen"><iframe src="AirScout/index.html?preview=${encodeURIComponent(preview)}&amp;release=booking-confirmed-check-v1" title="AirScout ${preview} mobile page preview" tabindex="-1" loading="lazy"></iframe></span><span class="device-home"></span></span>`;
   }
   if (type === 'workpal') {
     const previewPage = typeof file === 'string' ? file : 'overview';
@@ -1029,7 +1029,7 @@ function openCaseStudy(index, { fromHistory = false } = {}) {
   };
   const pageRedesign = pageRedesigns[index] || null;
   const hasPrototype = [14, 15, 16].includes(index) || Boolean(project.prototypeHref);
-  const prototypeHref = index === 14 ? 'AirScout/index.html?preview=dashboard' : index === 15 ? 'WorkPal/index.html' : index === 16 ? 'AI Project Dashboard/dist/index.html' : project.prototypeHref;
+  const prototypeHref = index === 14 ? 'AirScout/index.html?preview=dashboard&release=booking-confirmed-check-v1' : index === 15 ? 'WorkPal/index.html' : index === 16 ? 'AI Project Dashboard/dist/index.html' : project.prototypeHref;
   const role = 'Product Designer / UX/UI Designer; product-management responsibilities varied by initiative.';
   const researchStatus = pageRedesign
     ? `I kept this redesign focused on the page itself: what people notice first, what they understand, and whether the next action is easy to find. ${pageRedesign.purpose}`
@@ -1313,7 +1313,7 @@ document.addEventListener('click', (event) => {
   const path = decodeURIComponent(new URL(link.href, location.href).pathname);
   let launch;
   if (path.endsWith('/WorkPal/index.html')) launch = ['workpal'];
-  else if (path.endsWith('/AirScout/index.html')) launch = ['AirScout', new URL('AirScout/index.html?preview=dashboard', location.href).href];
+  else if (path.endsWith('/AirScout/index.html')) launch = ['AirScout', new URL('AirScout/index.html?preview=dashboard&release=booking-confirmed-check-v1', location.href).href];
   else if (path.endsWith('/AI Project Dashboard/dist/index.html')) launch = ['Margin', new URL('AI Project Dashboard/dist/index.html?portfolioPreview=1&previewView=timeline&mobileViewport=1', location.href).href];
   if (!launch) return;
   event.preventDefault();
