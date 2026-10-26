@@ -1612,11 +1612,14 @@ imageLightbox.addEventListener('click', (event) => {
 const sectionNavLinks = [...document.querySelectorAll('.topbar nav a[href^="#"]')];
 const sectionNavTargets = sectionNavLinks
   .map((link) => document.querySelector(link.getAttribute('href')))
-  .filter(Boolean);
+  .filter(Boolean)
+  .sort((a, b) => a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1);
 const topbar = document.querySelector('.topbar');
+const sectionNav = topbar?.querySelector('nav');
 function syncTopbarScrollOffset() {
   if (!topbar) return;
   document.documentElement.style.setProperty('--topbar-height', `${Math.ceil(topbar.getBoundingClientRect().height)}px`);
+  if (sectionNav) requestAnimationFrame(updateSectionNavigation);
 }
 syncTopbarScrollOffset();
 if (topbar && 'ResizeObserver' in window) new ResizeObserver(syncTopbarScrollOffset).observe(topbar);
@@ -1624,8 +1627,9 @@ window.addEventListener('resize', syncTopbarScrollOffset, { passive: true });
 let sectionNavFrame = 0;
 function updateSectionNavigation() {
   sectionNavFrame = 0;
-  const headerBottom = document.querySelector('.topbar').getBoundingClientRect().bottom;
-  const marker = headerBottom + Math.max(48, (window.innerHeight - headerBottom) * 0.35);
+  const headerBottom = topbar?.getBoundingClientRect().bottom || 0;
+  // Switch sections as soon as their top reaches the content edge below the sticky header.
+  const marker = headerBottom + 18;
   let current = null;
   for (const section of sectionNavTargets) {
     if (section.getBoundingClientRect().top <= marker) current = section;
@@ -1637,6 +1641,16 @@ function updateSectionNavigation() {
     if (current && link.hash === `#${current.id}`) link.setAttribute('aria-current', 'location');
     else link.removeAttribute('aria-current');
   });
+  const activeLink = sectionNavLinks.find((link) => link.getAttribute('aria-current') === 'location');
+  if (sectionNav && activeLink) {
+    const navRect = sectionNav.getBoundingClientRect();
+    const linkRect = activeLink.getBoundingClientRect();
+    sectionNav.style.setProperty('--nav-indicator-x', `${linkRect.left - navRect.left}px`);
+    sectionNav.style.setProperty('--nav-indicator-width', `${linkRect.width}px`);
+    sectionNav.dataset.hasActiveSection = 'true';
+  } else if (sectionNav) {
+    sectionNav.dataset.hasActiveSection = 'false';
+  }
 }
 function queueSectionNavigationUpdate() {
   if (!sectionNavFrame) sectionNavFrame = requestAnimationFrame(updateSectionNavigation);

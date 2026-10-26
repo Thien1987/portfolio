@@ -796,3 +796,9 @@ html{scroll-padding-top:calc(var(--topbar-height,76px) + 12px)}
   .image-lightbox.prototype-app-overlay{padding:0}
   .prototype-app-overlay .lightbox-body,.prototype-app-overlay .lightbox-images.prototype-app-frame,.prototype-app-frame iframe{height:100dvh}
 }
+
+/* One shared indicator follows the active section and the actual nav-link geometry. */
+.topbar nav{position:relative}
+.topbar nav::after{content:"";position:absolute;left:0;bottom:3px;width:var(--nav-indicator-width,0px);height:2px;background:var(--orange);transform:translateX(var(--nav-indicator-x,0px));opacity:0;transition:transform .26s cubic-bezier(.2,.75,.25,1),width .26s cubic-bezier(.2,.75,.25,1),opacity .16s ease;pointer-events:none}
+.topbar nav[data-has-active-section="true"]::after{opacity:1}
+.topbar nav a::after{content:none!important}
