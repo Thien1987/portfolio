@@ -397,35 +397,6 @@ function renderDevice(file, type, className = '') {
   return `<span class="project-device ${className}"${expandable}><span class="device-island"></span><span class="device-screen"><img src="${file}" alt="Mobile app screen" loading="lazy"></span><span class="device-home"></span></span>`;
 }
 
-const workReelMarkup = `<section class="work-reel" aria-labelledby="work-reel-title">
-  <div class="work-reel-head"><div><h2 id="work-reel-title">Good ideas,<br><em>out in the world.</em></h2></div><div class="work-reel-intro"><p>Different products, different teams. One focus: making the experience clearer.</p><a href="#work">Explore all projects <span>↗</span></a></div></div>
-  <div class="work-reel-rows"><div class="work-reel-row"><div class="work-reel-track" id="work-reel-track-one"></div></div><div class="work-reel-row"><div class="work-reel-track work-reel-track-reverse" id="work-reel-track-two"></div></div></div>
-  <div class="work-reel-foot"><span>17 PROJECTS · PRODUCT DESIGN · 2019–2026</span></div>
-</section>`;
-document.querySelector('#contact')?.insertAdjacentHTML('beforebegin', workReelMarkup);
-
-function renderWorkReelTrack(trackId, projectIndexes) {
-  const track = document.querySelector(`#${trackId}`);
-  if (!track) return;
-  const group = document.createElement('div');
-  group.className = 'work-reel-group';
-  group.innerHTML = projectIndexes.map((projectIndex) => {
-    const project = projects[projectIndex];
-    const screens = projectScreens[projectIndex];
-    const firstScreen = screens.type === 'sidebarPair' ? screens.files : screens.files[0];
-    const cardType = ['desktop', 'agent'].includes(screens.type) ? 'reel-desktop-card' : screens.type === 'sidebarPair' ? 'reel-sidebar-card' : 'reel-mobile-card';
-    return `<button class="work-reel-card ${cardType}" type="button" data-project="${projectIndex}">${renderDevice(firstScreen, screens.type, 'reel-device')}</button>`;
-  }).join('');
-  const duplicate = group.cloneNode(true);
-  duplicate.setAttribute('aria-hidden', 'true');
-  duplicate.querySelectorAll('.work-reel-card').forEach((card) => { card.tabIndex = -1; });
-  track.replaceChildren(group, duplicate);
-  fitPhoneScreens(track);
-  fitDesktopScreens(track);
-  fitPlannerScreens(track);
-  fitWorkPalScreens(track);
-}
-
 function updateWorkPalScrollIndicator(event) {
   const data = event.data;
   if (data?.type !== 'workpal-scroll') return;
@@ -443,19 +414,6 @@ function updateWorkPalScrollIndicator(event) {
   track.classList.add('is-scrollable');
 }
 window.addEventListener('message', updateWorkPalScrollIndicator);
-
-renderWorkReelTrack('work-reel-track-one', [0, 1, 2, 3, 4, 5, 6]);
-renderWorkReelTrack('work-reel-track-two', [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
-
-document.querySelector('.work-reel-rows')?.addEventListener('pointerover', (event) => {
-  const card = event.target.closest('.work-reel-card');
-  if (card) card.closest('.work-reel-track')?.classList.add('is-hover-paused');
-});
-document.querySelector('.work-reel-rows')?.addEventListener('pointerout', (event) => {
-  const card = event.target.closest('.work-reel-card');
-  if (!card || (event.relatedTarget instanceof Node && card.contains(event.relatedTarget))) return;
-  card.closest('.work-reel-track')?.classList.remove('is-hover-paused');
-});
 
 function fitPhoneScreen(image) {
   const fit = () => {
@@ -1294,11 +1252,6 @@ projectSlider.addEventListener('click', (event) => {
     suppressSliderClick = false;
     return;
   }
-  const trigger = event.target.closest('[data-project]');
-  if (trigger) openCaseStudy(Number(trigger.dataset.project));
-});
-
-document.querySelector('.work-reel')?.addEventListener('click', (event) => {
   const trigger = event.target.closest('[data-project]');
   if (trigger) openCaseStudy(Number(trigger.dataset.project));
 });
