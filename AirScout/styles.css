@@ -142,3 +142,5 @@ body{font-size:16px;line-height:1.5}.primary-nav button,.primary-button,.seconda
 .journey-time-field input[type="range"]{width:min(100%,420px);height:24px;padding:0;border:0;border-radius:0;background:transparent;accent-color:var(--green);cursor:pointer}
 .journey-time-field input[type="range"]:focus-visible{outline:3px solid #7dc7a6;outline-offset:3px;border-radius:6px}
 .journey-time-scale{display:flex;justify-content:space-between;width:min(100%,420px);margin-top:-5px;color:var(--muted);font-size:10px}
+/* Keep narrow layouts within the phone viewport used by portfolio previews. */
+@media(max-width:740px){html,body{width:100%;max-width:100%;overflow-x:clip}.app-shell,main#app,.view{width:100%;max-width:100%;min-width:0}.view{overflow-x:clip}.view>*{min-width:0;max-width:100%}.app-header-inner,.primary-nav,.header-right{min-width:0;max-width:100%}}

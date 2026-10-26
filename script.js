@@ -313,6 +313,7 @@ const imageLightbox = document.querySelector('#image-lightbox');
 const lightboxImages = document.querySelector('#lightbox-images');
 const lightboxTitle = document.querySelector('#lightbox-title');
 const lightboxThumbnails = document.querySelector('#lightbox-thumbnails');
+const prototypeBack = document.querySelector('.prototype-back');
 let activeCaseProjectIndex = 0;
 let caseStudyReturnScrollY = 0;
 let caseStudyReturnTitle = document.title;
@@ -532,13 +533,14 @@ function fitPlannerScreens(root = document) {
 }
 
 function fitAirScoutMobileScreens(root = document) {
-  root.querySelectorAll('.agent-mobile-device:not(.case-gallery-mobile-device):not(.lightbox-device) .device-screen').forEach((screen) => {
+  root.querySelectorAll('.agent-mobile-device:not(.lightbox-device) .device-screen').forEach((screen) => {
     const frame = screen.querySelector('iframe');
     if (!frame) return;
     const scale = Math.min(screen.clientWidth / 390, screen.clientHeight / 720);
     if (!scale) return;
     frame.style.width = '390px';
     frame.style.height = '720px';
+    frame.style.position = 'absolute';
     frame.style.transform = `scale(${scale})`;
     frame.style.left = `${(screen.clientWidth - 390 * scale) / 2}px`;
     frame.style.top = `${(screen.clientHeight - 720 * scale) / 2}px`;
@@ -1242,7 +1244,8 @@ function renderExpandedSlide() {
   } else if (slide.type === 'agentMobile') {
     expandedView = document.createElement('div');
     expandedView.className = 'agent-expanded-preview agent-expanded-mobile';
-    expandedView.innerHTML = `${renderDevice(slide.files[0], 'agentMobile', 'lightbox-device')}<a class="button dark prototype-launch" href="AirScout/index.html?preview=dashboard" aria-haspopup="dialog">Open prototype <span>↗</span></a>`;
+    const previewPage = slide.files[0] || 'dashboard';
+    expandedView.innerHTML = `${renderDevice(previewPage, 'agentMobile', 'lightbox-device')}<a class="button dark prototype-launch" href="AirScout/index.html?preview=${encodeURIComponent(previewPage)}" aria-haspopup="dialog">Open prototype <span>↗</span></a>`;
     lightboxImages.classList.add('is-phone');
   } else if (slide.type === 'workpal') {
     expandedView = document.createElement('div');
@@ -1257,7 +1260,16 @@ function renderExpandedSlide() {
     lightboxImages.classList.add('is-phone');
   }
   lightboxImages.replaceChildren(expandedView);
-  lightboxTitle.textContent = slide.label;
+  const hasPrototypeAction = ['agent', 'planner', 'agentMobile'].includes(slide.type);
+  lightboxTitle.hidden = hasPrototypeAction;
+  if (hasPrototypeAction) {
+    const detail = document.createElement('p');
+    detail.className = 'expanded-preview-label';
+    detail.textContent = slide.label;
+    expandedView.append(detail);
+  } else {
+    lightboxTitle.textContent = slide.label;
+  }
   lightboxThumbnails.hidden = slide.type === 'agent' || slide.type === 'agentMobile' || slide.type === 'workpal';
   lightboxThumbnails.querySelectorAll('.lightbox-thumb').forEach((button, index) => {
     button.classList.toggle('active', index === expandedSlideIndex);
@@ -1277,6 +1289,7 @@ function openWorkPalPrototypeOverlay() {
   imageLightbox.classList.add('workpal-prototype-overlay');
   imageLightbox.classList.remove('prototype-app-overlay');
   imageLightbox.classList.remove('has-multiple');
+  prototypeBack.hidden = false;
   lightboxThumbnails.replaceChildren();
   document.querySelector('.lightbox-prev').hidden = true;
   document.querySelector('.lightbox-next').hidden = true;
@@ -1292,6 +1305,7 @@ function openFullPrototypeOverlay(title, src) {
   document.documentElement.classList.add('prototype-overlay-open');
   imageLightbox.classList.add('prototype-app-overlay');
   imageLightbox.classList.remove('workpal-prototype-overlay', 'has-multiple');
+  prototypeBack.hidden = false;
   lightboxImages.className = 'lightbox-images prototype-app-frame';
   const frame = document.createElement('iframe');
   frame.src = src;
@@ -1320,7 +1334,7 @@ document.addEventListener('click', (event) => {
   if (launch[0] === 'workpal') openWorkPalPrototypeOverlay();
   else openFullPrototypeOverlay(launch[0], launch[1]);
 });
-imageLightbox.addEventListener('close', () => { imageLightbox.classList.remove('workpal-prototype-overlay', 'prototype-app-overlay'); document.documentElement.classList.remove('prototype-overlay-open'); });
+imageLightbox.addEventListener('close', () => { imageLightbox.classList.remove('workpal-prototype-overlay', 'prototype-app-overlay'); prototypeBack.hidden = true; document.documentElement.classList.remove('prototype-overlay-open'); });
 
 function setExpandedSlide(index) {
   if (!expandedSlides.length) return;
@@ -1349,7 +1363,8 @@ function openExpandedScreens(device) {
   if (screenSet.type === 'agent') {
     const mobilePreview = device.classList.contains('agent-mobile-device');
     if (mobilePreview) {
-      expandedSlides = [{ type: 'agentMobile', files: [null], label: 'AirScout · My trips on mobile' }];
+      const activePage = new URL(device.querySelector('iframe')?.src || location.href).searchParams.get('preview') || 'dashboard';
+      expandedSlides = [{ type: 'agentMobile', files: [activePage], label: `AirScout · ${activePage.replaceAll('-', ' ')} on mobile` }];
     } else {
       const activePreview = new URL(device.querySelector('iframe')?.src || location.href).searchParams.get('preview');
       expandedSlides = screenSet.files.map((page) => ({ type: 'agent', files: [page], label: `AirScout · ${page.replaceAll('-', ' ')}` }));
@@ -1492,8 +1507,14 @@ caseContent.addEventListener('keydown', (event) => {
 });
 
 function returnFromCaseStudy() {
+  if (caseDialog.open) caseDialog.close();
+  document.title = caseStudyReturnTitle;
+  const root = document.documentElement;
+  const previousScrollBehavior = root.style.scrollBehavior;
+  root.style.scrollBehavior = 'auto';
+  window.scrollTo(0, caseStudyReturnScrollY);
+  root.style.scrollBehavior = previousScrollBehavior;
   if (history.state?.portfolioCaseStudyIndex === activeCaseProjectIndex) history.back();
-  else caseDialog.close();
 }
 document.querySelector('.case-close').addEventListener('click', returnFromCaseStudy);
 caseDialog.addEventListener('cancel', (event) => { event.preventDefault(); returnFromCaseStudy(); });
@@ -1513,6 +1534,7 @@ window.addEventListener('popstate', (event) => {
   }
 });
 
+prototypeBack.addEventListener('click', () => imageLightbox.close());
 document.querySelector('.lightbox-close').addEventListener('click', () => imageLightbox.close());
 document.querySelector('.lightbox-prev').addEventListener('click', () => setExpandedSlide(expandedSlideIndex - 1));
 document.querySelector('.lightbox-next').addEventListener('click', () => setExpandedSlide(expandedSlideIndex + 1));
