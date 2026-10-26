@@ -779,3 +779,7 @@ html{scroll-padding-top:calc(var(--topbar-height,76px) + 12px)}
 .about-section .about-ai-note>span{color:#8f4833}
 .about-section .about-ai-note p{color:#55554f}
 @media(max-width:800px){.about-section{background-image:radial-gradient(ellipse at 80% 76%,rgba(174,194,123,.14),transparent 44%),linear-gradient(180deg,rgba(12,16,14,.56) 0%,rgba(12,16,14,.68) 100%),url("Hero forest.webp");background-position:center,center,68% center}}
+/* Keep the greeting sticker fully visible outside the portrait frame. */
+.photo-frame{overflow:visible}
+.photo-sticker{z-index:2;right:-22px}
+@media(max-width:560px){.photo-sticker{right:-16px}}
