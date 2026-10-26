@@ -135,7 +135,7 @@ body{font-size:16px;line-height:1.5}.primary-nav button,.primary-button,.seconda
 .cabin-shift{animation:cabin-shift-in .24s ease-out both}
 @keyframes cabin-shift-in{from{opacity:.72;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.child-age-field,.cabin-shift{animation:none}}
-.journey-time-field{grid-column:1/-1;gap:8px}
+.journey-time-field{gap:8px}
 .journey-time-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .journey-time-heading label{font-size:11px;font-weight:700;color:#40514a}
 .journey-time-heading output{padding:5px 10px;border-radius:999px;background:var(--green-wash);color:var(--green-dark);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
