@@ -414,7 +414,7 @@ function renderWorkReelTrack(trackId, projectIndexes) {
     const screens = projectScreens[projectIndex];
     const firstScreen = screens.type === 'sidebarPair' ? screens.files : screens.files[0];
     const cardType = ['desktop', 'agent'].includes(screens.type) ? 'reel-desktop-card' : screens.type === 'sidebarPair' ? 'reel-sidebar-card' : 'reel-mobile-card';
-    return `<button class="work-reel-card ${cardType}" type="button" data-project="${projectIndex}" aria-label="Open case study: ${project.title}">${renderDevice(firstScreen, screens.type, 'reel-device')}</button>`;
+    return `<button class="work-reel-card ${cardType}" type="button" data-project="${projectIndex}">${renderDevice(firstScreen, screens.type, 'reel-device')}</button>`;
   }).join('');
   const duplicate = group.cloneNode(true);
   duplicate.setAttribute('aria-hidden', 'true');
@@ -608,7 +608,7 @@ function renderProjectSlider() {
     const screenCount = deviceType === 'sidebarPair' ? 1 : screenSet.files.length + (screenSet.mobileFiles?.length || 0);
     const cardDeviceClass = deviceType === 'agent' ? 'desktop' : deviceType === 'agentMobile' ? 'mobile' : deviceType;
     const aiAgentClass = deviceType === 'agent' || deviceType === 'workpal' ? 'ai-agent-card' : '';
-    return `<button class="slider-card ${cardDeviceClass}-card ${aiAgentClass}" type="button" data-project="${projectIndex}" aria-label="Open case study: ${project.title}, screen ${screenIndex + 1} of ${screenCount}">
+    return `<button class="slider-card ${cardDeviceClass}-card ${aiAgentClass}" type="button" data-project="${projectIndex}">
       <span class="device-wrap">${renderDevice(file, deviceType)}${deviceType === 'mobile' ? '<span class="device-glint"></span>' : ''}</span>
       <span class="slider-card-meta"><span class="slider-card-num">SCREEN ${String(screenIndex + 1).padStart(2, '0')} / ${String(screenCount).padStart(2, '0')}</span><span class="slider-card-arrow">↗</span></span>
       <span class="slider-card-title">${project.title}</span><span class="slider-card-category">${project.category}</span>
@@ -677,7 +677,7 @@ function initPrototypeCarousel() {
     }
     const prototypeLink = slide.querySelector('.airscout-feature-link[href]');
     if (!prototypeLink || slide.querySelector('.airscout-details-link')) return;
-    prototypeLink.innerHTML = 'Try the prototype in your browser <span aria-hidden="true">↗</span>';
+    prototypeLink.innerHTML = 'Open the interactive prototype <span aria-hidden="true">↗</span>';
     const actions = document.createElement('div');
     actions.className = 'airscout-feature-actions';
     prototypeLink.parentNode.insertBefore(actions, prototypeLink);
@@ -699,6 +699,11 @@ function initPrototypeCarousel() {
   slides.forEach((slide) => { slide.style.flex = `0 0 ${100 / slides.length}%`; slide.style.width = `${100 / slides.length}%`; });
   const show = (index) => {
     current = (index + slides.length) % slides.length;
+    const previewFrame = slides[current].querySelector('iframe[data-src]');
+    if (previewFrame && !previewFrame.getAttribute('src')) {
+      previewFrame.src = previewFrame.dataset.src;
+      delete previewFrame.dataset.src;
+    }
     track.style.transform = `translateX(-${current * (100 / slides.length)}%)`;
     dots.forEach((dot, dotIndex) => dot.setAttribute('aria-current', String(dotIndex === current)));
     slides.forEach((slide, slideIndex) => {

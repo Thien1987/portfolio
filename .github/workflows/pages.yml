@@ -38,8 +38,10 @@ jobs:
         shell: bash
         run: |
           mkdir -p _site
-          cp index.html script.js styles.css "Hero forest.png" "Profile portrait upright.png" _site/
+          cp index.html script.js styles.css "Hero forest.webp" "Profile portrait upright.webp" favicon.svg og-image.png _site/
           cp -R Portfolio AirScout WorkPal _site/
+          rm -f "_site/AirScout/assets/travel-coast.png"
+          rm -f "_site/WorkPal/work-travel-background.png"
           mkdir -p "_site/AI Project Dashboard"
           cp -R "AI Project Dashboard/dist" "_site/AI Project Dashboard/"
           touch _site/.nojekyll
