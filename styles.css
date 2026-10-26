@@ -760,3 +760,7 @@ html{scroll-padding-top:calc(var(--topbar-height,76px) + 12px)}
 .prototype-carousel-controls .prototype-carousel-dot:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
 .contact-details,.contact-details *,.contact-form label,.form-note,.contact-section footer,.contact-section footer a{color:#62615a}
 .sidebar-foot,.care-float-label,.care-float-meta{color:#62615a}
+
+/* Give the relocated hero a more visible forest atmosphere without competing with its content. */
+.hero{background-color:#17231b;background-image:radial-gradient(ellipse at 78% 18%,rgba(174,194,123,.20),transparent 42%),linear-gradient(90deg,rgba(12,18,14,.72) 0%,rgba(12,18,14,.48) 45%,rgba(12,18,14,.14) 100%),url("Hero forest.webp");background-size:auto,auto,cover;background-position:center,left top,right center;background-repeat:no-repeat}
+@media(max-width:800px){.hero{background-image:radial-gradient(ellipse at 72% 20%,rgba(174,194,123,.16),transparent 48%),linear-gradient(180deg,rgba(12,18,14,.70) 0%,rgba(12,18,14,.42) 100%),url("Hero forest.webp");background-position:center,center,68% center}}
