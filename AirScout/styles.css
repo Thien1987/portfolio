@@ -113,7 +113,7 @@ body{font-size:16px;line-height:1.5}.primary-nav button,.primary-button,.seconda
 .choice-card.selected{box-shadow:var(--shadow-xs),inset 0 0 0 1px var(--green)}
 .assistant-panel{box-shadow:var(--shadow-2xl)}
 /* Flight leg disclosure within each monitored destination */
-.destination-row{grid-template-columns:minmax(240px,1.35fr) minmax(220px,1.15fr) minmax(120px,auto) minmax(215px,auto)}
+.destination-row{grid-template-columns:minmax(240px,1.05fr) minmax(220px,1.45fr) minmax(120px,auto) minmax(215px,auto)}
 .destination-route-button{width:100%;min-width:0;padding:4px 0;border:0;background:transparent;color:var(--ink);text-align:left;cursor:pointer}
 .destination-route-button:focus-visible,.destination-itinerary-toggle:focus-visible{outline:3px solid #7dc7a6;outline-offset:3px;border-radius:6px}
 .destination-preview{justify-self:center;align-self:center;text-align:center}
