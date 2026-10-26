@@ -1112,12 +1112,12 @@ function openCaseStudy(index, { fromHistory = false } = {}) {
 
   caseContent.innerHTML = `
     <div class="case-reading-progress" role="progressbar" aria-label="Case study reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+    <nav class="case-section-nav" aria-label="Case study sections"><a href="#case-problem">Problem</a><a href="#case-research">Research</a><a href="#case-define">Approach</a><a href="#case-decide">Decisions</a><a href="#case-test">Next steps</a><a href="#case-craft">Design</a><a href="#case-reflection">Reflection</a></nav>
     <header class="case-study-summary" id="case-summary">
       <div class="case-summary-copy"><span class="case-kicker">${project.category || 'PRODUCT DESIGN'} · CASE STUDY</span><h2 id="case-title">${project.title}</h2><p>${summary}</p>${prototypeHref ? `<a class="button dark prototype-launch" href="${prototypeHref}" aria-haspopup="dialog">Open interactive prototype <span>↗</span></a>` : ''}</div>
       <div class="case-feature-screen">${renderDevice(screens.type === 'sidebarPair' ? screens.files : screens.files[0], screens.type, 'case-device')}</div>
       ${![14, 15, 16].includes(index) ? '<aside class="case-note case-nda-note"><p>I\'ve changed some names and details to respect client confidentiality.</p></aside>' : ''}
     </header>
-    <nav class="case-section-nav" aria-label="Case study sections"><a href="#case-problem">Problem</a><a href="#case-research">Research</a><a href="#case-define">Approach</a><a href="#case-decide">Decisions</a><a href="#case-test">Next steps</a><a href="#case-craft">Design</a><a href="#case-reflection">Reflection</a></nav>
     <article class="case-study-body">
       <section class="case-study-section" id="case-problem" data-case-section><span class="case-section-index">01 / ${pageRedesign ? 'PAGE REDESIGN' : 'THE PROBLEM'}</span><h3>${pageRedesign ? pageRedesign.title : takeaway}</h3>${problemDetails}</section>
       <section class="case-study-section" id="case-research" data-case-section><span class="case-section-index">02 / ${pageRedesign ? 'PAGE REVIEW' : 'DESIGN QUESTIONS'}</span>${researchSection}</section>
