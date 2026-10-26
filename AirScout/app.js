@@ -200,11 +200,13 @@ function setupAside() {
   const s = state.settings;
   return `<aside class="setup-aside"><section class="surface"><div class="small-label">Trip at a glance</div><div class="aside-price">${esc(s.origin.split('(')[1]?.replace(')', '') || 'YUL')} <span style="color:var(--green)">→</span> ${esc(s.destination.split('(')[1]?.replace(')', '') || 'LIS')}</div><p class="subtle" style="font-size:11px;margin:0">${fmtDate(s.departDate)} – ${fmtDate(s.returnDate)} · ${esc(partySummary(s))}</p><ul class="aside-list"><li><span>Hard limit · total</span><b>${money(Number(s.budget) || 0)}</b></li><li><span>Hard limit · layovers</span><b>${esc(s.maxStops)}</b></li><li><span>Includes</span><b>${esc(s.baggage)}</b></li><li><span>Check until</span><b>${fmtDate(s.monitorUntil)}</b></li></ul><div class="permission-note"><span class="permission-mark">i</span><p>Prices, airlines, and flight details can change before purchase.</p></div></section></aside>`;
 }
+function childAgeFieldsMarkup(settings) {
+  const childCount = Math.max(0, Number(settings.children) || 0);
+  return Array.from({ length: childCount }, (_, index) => { const value = Array.isArray(settings.childAges) ? settings.childAges[index] : ''; return `<div class="field child-age-field"><label for="childAge${index}">Child${childCount > 1 ? ` ${index + 1}` : ''} age</label><select id="childAge${index}" name="childAge${index}" data-child-age required><option value="" ${value === '' || value == null ? 'selected' : ''}>Select age</option>${Array.from({ length: 19 }, (_, age) => `<option value="${age}" ${Number(value) === age && value !== '' && value != null ? 'selected' : ''}>${age} ${age === 1 ? 'year' : 'years'}</option>`).join('')}</select></div>`; }).join('');
+}
 function tripStep() {
   const s = state.settings;
-  const childCount = Math.max(0, Number(s.children) || 0);
-  const childAges = Array.from({ length: childCount }, (_, index) => { const value = Array.isArray(s.childAges) ? s.childAges[index] : ''; return `<div class="field child-age-field"><label for="childAge${index}">Child${childCount > 1 ? ` ${index + 1}` : ''} age</label><select id="childAge${index}" name="childAge${index}" data-child-age required><option value="" ${value === '' || value == null ? 'selected' : ''}>Select age</option>${Array.from({ length: 19 }, (_, age) => `<option value="${age}" ${Number(value) === age && value !== '' && value != null ? 'selected' : ''}>${age} ${age === 1 ? 'year' : 'years'}</option>`).join('')}</select></div>`; }).join('');
-  const childAgeFields = childAges;
+  const childAgeFields = childAgeFieldsMarkup(s);
   return `<section class="surface"><h3>Where are you going?</h3><p class="subtle">Choose the trip details the agent will use to search.</p><div class="form-grid"><div class="field"><label for="origin">From</label><input id="origin" name="origin" value="${esc(s.origin)}" required autocomplete="off" /></div><div class="field"><label for="destination">To</label><input id="destination" name="destination" value="${esc(s.destination)}" required autocomplete="off" /></div>${field('Depart', 'departDate', s.departDate, 'date', '', 'required')}${field('Return', 'returnDate', s.returnDate, 'date', '', 'required')}${selectField('Date flexibility', 'flexibleDays', `${s.flexibleDays} days`, ['0', '1', '2', '3', '5', '7'].map(x => `${x} days`))}${selectField('Adults', 'adults', s.adults, ['1', '2', '3', '4', '5', '6'])}${selectField('Children', 'children', s.children, ['0', '1', '2', '3', '4', '5'])}${childAgeFields}${selectField('Cabin', 'cabin', s.cabin, ['Economy', 'Premium economy', 'Business', 'First'])}</div><div class="form-actions"><span class="subtle" style="font-size:10px">Round trip · enter the adults and children in your party.</span>${button('Continue <span aria-hidden="true">→</span>', 'setup-next')}</div><p class="setup-error" aria-live="polite"></p></section>`;
 }
 function limitsStep() {
@@ -724,7 +726,36 @@ document.querySelector('.assistant-widget')?.addEventListener('click', event => 
 });
 document.getElementById?.('assistant-form')?.addEventListener('submit', event => { event.preventDefault(); const input = document.getElementById?.('assistant-input'); if (!input) return; submitAssistantMessage(input.value); input.value = ''; input.focus(); });
 document.addEventListener?.('keydown', event => { if (event.key === 'Escape' && assistantPanel && !assistantPanel.hidden && !state.showRemoveTrackingConfirm) { assistantPanel.hidden = true; assistantLauncher?.setAttribute('aria-expanded', 'false'); assistantLauncher?.focus(); } });
-app.addEventListener('change', (event) => { if (event.target.id === 'children' && state.screen === 'setup' && state.step === 0) { const form = event.target.closest('.surface'); for (const id of ['origin','destination','departDate','returnDate','flexibleDays','adults','cabin']) { const input = form?.querySelector('#' + id); if (input) state.settings[id === 'flexibleDays' ? 'flexibleDays' : id] = id === 'flexibleDays' ? input.value.replace(' days', '') : input.value; } state.settings.children = event.target.value; state.settings.childAges = [...(form?.querySelectorAll('[data-child-age]') || [])].map(select => select.value).slice(0, Number(event.target.value)); state.settings.travelers = String(partyCounts(state.settings).total); save(); render(); document.querySelector('#childAge0')?.focus(); } if (event.target.name === 'permission') { document.querySelectorAll('.choice-card').forEach(card => card.classList.toggle('selected', card.querySelector('input').checked)); state.settings.permission = event.target.value; save(); } if (event.target.name === 'consent') { state.consent = event.target.checked; save(); } });
+app.addEventListener('change', (event) => {
+  if (event.target.id === 'children' && state.screen === 'setup' && state.step === 0) {
+    const form = event.target.closest('.surface');
+    for (const id of ['origin','destination','departDate','returnDate','flexibleDays','adults','cabin']) {
+      const input = form?.querySelector('#' + id);
+      if (input) state.settings[id] = id === 'flexibleDays' ? input.value.replace(' days', '') : input.value;
+    }
+    state.settings.children = event.target.value;
+    state.settings.childAges = [...(form?.querySelectorAll('[data-child-age]') || [])].map(select => select.value).slice(0, Number(event.target.value));
+    state.settings.travelers = String(partyCounts(state.settings).total);
+    form?.querySelectorAll('.child-age-field').forEach(field => field.remove());
+    const cabinField = form?.querySelector('#cabin')?.closest('.field');
+    if (cabinField) {
+      const holder = document.createElement('div');
+      holder.innerHTML = childAgeFieldsMarkup(state.settings);
+      [...holder.children].forEach(field => cabinField.before(field));
+      if (Number(event.target.value) > 0) {
+        cabinField.classList.remove('cabin-shift');
+        void cabinField.offsetWidth;
+        cabinField.classList.add('cabin-shift');
+        cabinField.addEventListener('animationend', () => cabinField.classList.remove('cabin-shift'), { once: true });
+      }
+    }
+    const asideSummary = document.querySelector('.setup-aside .surface > p.subtle');
+    if (asideSummary) asideSummary.textContent = `${fmtDate(state.settings.departDate)} – ${fmtDate(state.settings.returnDate)} · ${partySummary(state.settings)}`;
+    save();
+  }
+  if (event.target.name === 'permission') { document.querySelectorAll('.choice-card').forEach(card => card.classList.toggle('selected', card.querySelector('input').checked)); state.settings.permission = event.target.value; save(); }
+  if (event.target.name === 'consent') { state.consent = event.target.checked; save(); }
+});
 const scenarioSelect = document.querySelector('#scenario-select');
 if (scenarioSelect) scenarioSelect.addEventListener('change', (event) => { state.scenario = event.target.value; if (state.scenario !== 'cancel-failed' && state.scenario !== 'timeout') { state.revisedApproved = false; state.total = bestFlight() ? flightTotal(bestFlight()) : 0; } if (state.scenario === 'happy') { state.screen = state.createdAt ? 'dashboard' : 'welcome'; state.status = state.createdAt ? 'Monitoring' : 'Not started'; } else if (state.scenario === 'timeout') { state.bookingAttempted = true; state.paymentStatus = 'unknown'; state.status = 'Booking'; state.screen = 'exception'; } else if (state.scenario === 'cancel-failed') { state.bookingCompleted = true; state.bookingRef ||= 'WN-7K4P2A'; state.cancelSubmitted = true; state.status = 'Booked'; state.screen = 'exception'; } else { state.status = state.scenario === 'price-increase' ? 'Awaiting approval' : 'Paused'; state.screen = 'exception'; } log('Trip status updated', state.scenario.replaceAll('-', ' ')); save(); render(); });
 const previewScreen = new URLSearchParams(location.search).get('preview');

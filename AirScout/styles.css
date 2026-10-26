@@ -132,4 +132,6 @@ body{font-size:16px;line-height:1.5}.primary-nav button,.primary-button,.seconda
 @media(prefers-reduced-motion:reduce){.destination-itinerary-chevron{transition:none}}
 .child-age-field{animation:child-age-reveal .2s ease-out both}
 @keyframes child-age-reveal{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-@media(prefers-reduced-motion:reduce){.child-age-field{animation:none}}
+.cabin-shift{animation:cabin-shift-in .24s ease-out both}
+@keyframes cabin-shift-in{from{opacity:.72;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.child-age-field,.cabin-shift{animation:none}}
