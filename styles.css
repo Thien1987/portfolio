@@ -761,24 +761,6 @@ html{scroll-padding-top:calc(var(--topbar-height,76px) + 12px)}
 .contact-details,.contact-details *,.contact-form label,.form-note,.contact-section footer,.contact-section footer a{color:#62615a}
 .sidebar-foot,.care-float-label,.care-float-meta{color:#62615a}
 
-/* Give the relocated hero a more visible forest atmosphere without competing with its content. */
-.hero{background-color:#17231b;background-image:radial-gradient(ellipse at 78% 18%,rgba(174,194,123,.20),transparent 42%),linear-gradient(90deg,rgba(12,18,14,.72) 0%,rgba(12,18,14,.48) 45%,rgba(12,18,14,.14) 100%),url("Hero forest.webp");background-size:auto,auto,cover;background-position:center,left top,right center;background-repeat:no-repeat}
-@media(max-width:800px){.hero{background-image:radial-gradient(ellipse at 72% 20%,rgba(174,194,123,.16),transparent 48%),linear-gradient(180deg,rgba(12,18,14,.70) 0%,rgba(12,18,14,.42) 100%),url("Hero forest.webp");background-position:center,center,68% center}}
-/* Calm forest backdrop for the portrait introduction shown first on the page. */
-.about-section{position:relative;isolation:isolate;background-color:#e9e7dc;background-image:radial-gradient(ellipse at 12% 22%,rgba(154,174,125,.22),transparent 42%),linear-gradient(100deg,rgba(244,241,234,.72) 0%,rgba(244,241,234,.84) 47%,rgba(244,241,234,.92) 100%),url("Hero forest.webp");background-size:auto,auto,cover;background-position:center,left center,68% center;background-repeat:no-repeat}
-@media(max-width:800px){.about-section{background-image:radial-gradient(ellipse at 82% 74%,rgba(154,174,125,.18),transparent 44%),linear-gradient(180deg,rgba(244,241,234,.84) 0%,rgba(244,241,234,.90) 100%),url("Hero forest.webp");background-position:center,center,64% center}}
-/* Match the portrait introduction to the forest treatment used by the original hero. */
-.about-section{background-color:#17231b;background-image:radial-gradient(ellipse at 78% 17%,rgba(174,194,123,.16),transparent 42%),linear-gradient(100deg,rgba(12,16,14,.56) 0%,rgba(12,16,14,.65) 48%,rgba(12,16,14,.60) 100%),url("Hero forest.webp");background-size:auto,auto,cover;background-position:center,left top,68% center;background-repeat:no-repeat;color:#f4f1ea}
-.about-section .about-copy h2{color:#f7f5ef}
-.about-section .about-copy h2 em{color:#f0805d}
-.about-section .about-copy>p{color:#efede5}
-.about-section .eyebrow,.about-section .photo-caption{color:#deded3}
-.about-section .text-link{color:#f4f1ea}
-.about-section .about-tags span{border-color:#ffffff50;background:#1520195c;color:#f0efe8}
-.about-section .about-ai-note{background:rgba(244,241,234,.94);color:#20211e;box-shadow:0 14px 36px #0002}
-.about-section .about-ai-note>span{color:#8f4833}
-.about-section .about-ai-note p{color:#55554f}
-@media(max-width:800px){.about-section{background-image:radial-gradient(ellipse at 80% 76%,rgba(174,194,123,.14),transparent 44%),linear-gradient(180deg,rgba(12,16,14,.56) 0%,rgba(12,16,14,.68) 100%),url("Hero forest.webp");background-position:center,center,68% center}}
 /* Keep the greeting sticker fully visible outside the portrait frame. */
 .photo-frame{overflow:visible}
 .photo-sticker{z-index:2;right:-22px}
