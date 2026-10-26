@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f6f7f4" />
+  <title>AirScout — Your flight agent</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="app-header-inner">
+        <a class="brand" href="#" data-action="home" aria-label="AirScout home"><span class="brand-symbol" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path class="brand-route" d="M6 23c5-1 6-10 12-10 3 0 4 2 6 2"/><path class="brand-plane" d="m25 9 2 6-6 2-3 5-1-6-5-3 6-1z"/></svg></span><span>AirScout</span></a>
+        <nav class="primary-nav" aria-label="Main navigation"><button data-action="nav" data-screen="dashboard">My trips</button><button data-action="new-trip">Plan a trip</button><button data-action="nav" data-screen="product-story">Product story</button></nav>
+        <div class="header-right"><div class="account-menu-wrap"><button class="account-profile" type="button" data-action="toggle-account-menu" aria-label="Account menu for John Smith" aria-haspopup="menu" aria-expanded="false" aria-controls="account-menu"><span class="account-avatar" aria-hidden="true">JS</span><span class="account-copy"><b>John Smith</b><small>Signed in</small></span><span class="account-chevron" aria-hidden="true">⌄</span></button><div class="account-dropdown" id="account-menu" role="menu" aria-label="Account sections" hidden><div class="account-dropdown-heading"><b>John Smith</b><span>Account settings</span></div><button type="button" role="menuitem" data-action="account-section" data-section="Personal information">Personal information</button><button type="button" role="menuitem" data-action="account-section" data-section="Travelers">Travelers</button><button type="button" role="menuitem" data-action="account-section" data-section="Payment methods">Payment methods</button><button type="button" role="menuitem" data-action="account-section" data-section="Notifications">Notifications</button><div class="account-dropdown-divider"></div><button type="button" role="menuitem" data-action="account-section" data-section="Sign out">Sign out</button></div></div></div>
+      </div>
+    </header>
+    <main id="app" tabindex="-1" aria-live="polite"></main>
+    <footer class="app-footer"><span>AirScout flight agent · Flight booking</span><span>Fares and ticket details are shown before you book.</span></footer>
+  </div>
+  <aside class="assistant-widget" aria-label="AirScout assistant">
+    <section class="assistant-panel" id="assistant-panel" aria-label="Chat with your flight assistant" hidden>
+      <header class="assistant-head"><span class="assistant-mark" aria-hidden="true">✦</span><div><b>AirScout assistant</b><small>Trip information and fare guidance</small></div><button type="button" class="assistant-close" data-chat-action="close" aria-label="Close assistant">×</button></header>
+      <div class="assistant-messages" id="assistant-messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+      <form class="assistant-compose" id="assistant-form"><label class="sr-only" for="assistant-input">Ask about your trips</label><input id="assistant-input" name="message" type="text" autocomplete="off" placeholder="Ask about your trips…" maxlength="400" required><button type="submit" aria-label="Send message">↑</button></form>
+    </section>
+    <button class="assistant-launcher" type="button" data-chat-action="toggle" aria-expanded="false" aria-controls="assistant-panel"><span aria-hidden="true">✦</span><span>Ask your agent</span></button>
+  </aside>
+  <script src="app.js"></script>
+</body>
+</html>
