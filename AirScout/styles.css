@@ -112,3 +112,21 @@ body{font-size:16px;line-height:1.5}.primary-nav button,.primary-button,.seconda
 .primary-button:hover{box-shadow:var(--shadow-sm)}
 .choice-card.selected{box-shadow:var(--shadow-xs),inset 0 0 0 1px var(--green)}
 .assistant-panel{box-shadow:var(--shadow-2xl)}
+/* Flight leg disclosure within each monitored destination */
+.destination-row{grid-template-columns:minmax(240px,1.35fr) minmax(220px,1.15fr) minmax(120px,auto) minmax(215px,auto)}
+.destination-route-button{width:100%;min-width:0;padding:4px 0;border:0;background:transparent;color:var(--ink);text-align:left;cursor:pointer}
+.destination-route-button:focus-visible,.destination-itinerary-toggle:focus-visible{outline:3px solid #7dc7a6;outline-offset:3px;border-radius:6px}
+.destination-preview{justify-self:center;align-self:center;text-align:center}
+.destination-preview .destination-itinerary-toggle{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:30px;margin-top:4px;padding:3px 8px;border:0;border-radius:999px;background:transparent;color:var(--green-dark);font:600 11px Manrope,sans-serif;cursor:pointer}
+.destination-preview .destination-itinerary-toggle:hover{background:#f0f6f1}
+.destination-itinerary-chevron{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:transform .18s ease}
+.destination-itinerary-toggle[aria-expanded="true"] .destination-itinerary-chevron{transform:rotate(180deg)}
+.destination-row-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;min-width:0}
+.destination-row-actions .destination-row-monitor{justify-content:flex-end}
+.destination-row.is-expanded{background:#fbfcfa}
+.destination-itinerary-panel{grid-column:1/-1;min-width:0;border-top:1px solid var(--line)}
+.destination-itinerary-panel[hidden]{display:none}
+.destination-itinerary-panel .trip-itinerary-content{padding:14px 0 4px}
+@media(max-width:950px) and (min-width:741px){.destination-row{grid-template-columns:minmax(0,1fr) minmax(190px,.85fr) auto;gap:12px}.destination-row-actions{grid-column:1/-1;justify-content:flex-end}.destination-preview{justify-self:center}}
+@media(max-width:740px){.destination-row{grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto;gap:10px 14px}.destination-route-button{grid-column:1/-1;grid-row:1}.destination-preview{grid-column:1;grid-row:2;justify-self:start;text-align:left}.destination-row .destination-fare{grid-column:2;grid-row:2;justify-self:end;text-align:right}.destination-row-actions{grid-column:1/-1;grid-row:3;justify-content:space-between}.destination-itinerary-panel{grid-column:1/-1;grid-row:4}.destination-preview .destination-itinerary-toggle{justify-content:flex-start;margin-left:-8px}}
+@media(prefers-reduced-motion:reduce){.destination-itinerary-chevron{transition:none}}
