@@ -44,6 +44,7 @@ jobs:
           rm -f "_site/WorkPal/work-travel-background.png"
           mkdir -p "_site/AI Project Dashboard"
           cp -R "AI Project Dashboard/dist" "_site/AI Project Dashboard/"
+          cp "AI Project Dashboard/public/index.html" "_site/AI Project Dashboard/dist/index.html"
           touch _site/.nojekyll
 
       - name: Configure GitHub Pages
