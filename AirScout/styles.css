@@ -130,3 +130,5 @@ body{font-size:16px;line-height:1.5}.primary-nav button,.primary-button,.seconda
 @media(max-width:950px) and (min-width:741px){.destination-row{grid-template-columns:minmax(0,1fr) minmax(190px,.85fr) auto;gap:12px}.destination-row-actions{grid-column:1/-1;justify-content:flex-end}.destination-preview{justify-self:center}}
 @media(max-width:740px){.destination-row{grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto auto;gap:10px 14px}.destination-route-button{grid-column:1/-1;grid-row:1}.destination-preview{grid-column:1;grid-row:2;justify-self:start;text-align:left}.destination-row .destination-fare{grid-column:2;grid-row:2;justify-self:end;text-align:right}.destination-row-actions{grid-column:1/-1;grid-row:3;justify-content:space-between}.destination-itinerary-panel{grid-column:1/-1;grid-row:4}.destination-preview .destination-itinerary-toggle{justify-content:flex-start;margin-left:-8px}}
 @media(prefers-reduced-motion:reduce){.destination-itinerary-chevron{transition:none}}
+.child-age-group{gap:9px}
+.child-age-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:12px}
