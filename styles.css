@@ -456,13 +456,13 @@ em,.orb-core,.portrait-placeholder{font-style:normal!important}
 .orbit-cursor svg{fill:#292a26;stroke:#292a26;stroke-width:1.2}
 .orbit-figma svg{stroke:none}
 .orbit-figma .figma-red{fill:#f24e1e}.orbit-figma .figma-orange{fill:#ff7262}.orbit-figma .figma-purple{fill:#a259ff}.orbit-figma .figma-blue{fill:#1abcfe}.orbit-figma .figma-green{fill:#0acf83}
-.orbit-gleam svg{stroke:#c36547;stroke-width:1.5}
+.orbit-glean svg{stroke:#c36547;stroke-width:1.5}
 .orbit-one .orbit-codex{top:17%;left:16%}
 .orbit-one .orbit-claude{right:11%;bottom:15%}
 .orbit-one .orbit-figma{top:47%;left:82%}
 .orbit-two .orbit-chatgpt{top:11%;right:14%}
 .orbit-two .orbit-cursor{bottom:12%;left:13%}
-.orbit-two .orbit-gleam{top:57%;right:8%}
+.orbit-two .orbit-glean{top:57%;right:8%}
 .orbit-one .orbit-ai-mark i{animation:counter-drift 22s linear infinite}
 .orbit-two .orbit-ai-mark i{animation:counter-drift-reverse 28s linear infinite}
 @keyframes counter-drift{to{transform:rotate(-360deg)}}
