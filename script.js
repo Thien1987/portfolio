@@ -1007,7 +1007,7 @@ function openCaseStudy(index) {
   caseContent.innerHTML = `
     <div class="case-reading-progress" role="progressbar" aria-label="Case study reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
     <header class="case-study-summary" id="case-summary">
-      <div class="case-summary-copy"><span class="case-kicker">${project.category || 'PRODUCT DESIGN'} · CASE STUDY</span><h2 id="case-title">${project.title}</h2><p>${summary} My role was ${roleSummary}. Process: [REPLACE: summarize the discovery, prioritization, and iteration you actually completed]. <strong>Outcome:</strong> [REPLACE: add a verified result, or state that this is a concept and what you would validate.]</p>${project.prototypeHref ? `<a class="button dark prototype-launch" href="${project.prototypeHref}" target="_blank" rel="noreferrer">Open prototype <span>↗</span></a>` : ''}</div>
+      <div class="case-summary-copy"><span class="case-kicker">${project.category || 'PRODUCT DESIGN'} · CASE STUDY</span><h2 id="case-title">${project.title}</h2><p>${summary} My role was ${roleSummary}. Process: [REPLACE: summarize the discovery, prioritization, and iteration you actually completed]. <strong>Outcome:</strong> [REPLACE: add a verified result, or state that this is a concept and what you would validate.]</p>${project.prototypeHref ? `<a class="button dark prototype-launch" href="${project.prototypeHref}" aria-haspopup="dialog">Open prototype <span>↗</span></a>` : ''}</div>
       <div class="case-feature-screen">${renderDevice(screens.type === 'sidebarPair' ? screens.files : screens.files[0], screens.type, 'case-device')}</div>
     </header>
       <nav class="case-section-nav" aria-label="Case study sections"><a href="#case-problem">Problem</a><a href="#case-research">Research</a><a href="#case-define">Approach</a><a href="#case-decide">Decisions</a><a href="#case-test">Next steps</a><a href="#case-craft">Design</a><a href="#case-reflection">Reflection</a></nav>
@@ -1215,7 +1215,7 @@ function openCaseStudy(index) {
   caseContent.innerHTML = `
     <div class="case-reading-progress" role="progressbar" aria-label="Case study reading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
     <header class="case-study-summary" id="case-summary">
-      <div class="case-summary-copy"><span class="case-kicker">${project.category || 'PRODUCT DESIGN'} · CASE STUDY</span><h2 id="case-title">${project.title}</h2><p>${summary}</p>${prototypeHref ? `<a class="button dark prototype-launch" href="${prototypeHref}" target="_blank" rel="noreferrer">Open interactive prototype <span>↗</span></a>` : ''}</div>
+      <div class="case-summary-copy"><span class="case-kicker">${project.category || 'PRODUCT DESIGN'} · CASE STUDY</span><h2 id="case-title">${project.title}</h2><p>${summary}</p>${prototypeHref ? `<a class="button dark prototype-launch" href="${prototypeHref}" aria-haspopup="dialog">Open interactive prototype <span>↗</span></a>` : ''}</div>
       <div class="case-feature-screen">${renderDevice(screens.type === 'sidebarPair' ? screens.files : screens.files[0], screens.type, 'case-device')}</div>
       ${![14, 15, 16].includes(index) ? '<aside class="case-note case-nda-note"><p>I\'ve changed some names and details to respect client confidentiality.</p></aside>' : ''}
     </header>
@@ -1331,10 +1331,10 @@ function renderExpandedSlide() {
     expandedView = document.createElement('div');
     if (slide.type === 'agent') {
       expandedView.className = 'agent-expanded-preview';
-      expandedView.innerHTML = `${renderDevice(slide.files[0], 'agent', 'lightbox-device')}<a class="button dark prototype-launch" href="AirScout/index.html?preview=dashboard" target="_blank" rel="noreferrer">Open prototype <span>↗</span></a>`;
+      expandedView.innerHTML = `${renderDevice(slide.files[0], 'agent', 'lightbox-device')}<a class="button dark prototype-launch" href="AirScout/index.html?preview=dashboard" aria-haspopup="dialog">Open prototype <span>↗</span></a>`;
     } else if (slide.type === 'planner') {
       expandedView.className = 'agent-expanded-preview planner-expanded-preview';
-      expandedView.innerHTML = `${renderDevice(slide.files[0], 'planner', 'lightbox-device')}<a class="button dark prototype-launch" href="AI Project Dashboard/dist/index.html" target="_blank" rel="noreferrer">Open prototype <span>↗</span></a>`;
+      expandedView.innerHTML = `${renderDevice(slide.files[0], 'planner', 'lightbox-device')}<a class="button dark prototype-launch" href="AI Project Dashboard/dist/index.html" aria-haspopup="dialog">Open prototype <span>↗</span></a>`;
     } else {
       expandedView.className = 'desktop-device lightbox-device';
       expandedView.innerHTML = '<span class="desktop-chrome"><i></i><i></i><i></i></span><span class="desktop-display"><img alt="Expanded desktop app screen"></span>';
@@ -1344,7 +1344,7 @@ function renderExpandedSlide() {
   } else if (slide.type === 'agentMobile') {
     expandedView = document.createElement('div');
     expandedView.className = 'agent-expanded-preview agent-expanded-mobile';
-    expandedView.innerHTML = `${renderDevice(slide.files[0], 'agentMobile', 'lightbox-device')}<a class="button dark prototype-launch" href="AirScout/index.html?preview=dashboard" target="_blank" rel="noreferrer">Open prototype <span>↗</span></a>`;
+    expandedView.innerHTML = `${renderDevice(slide.files[0], 'agentMobile', 'lightbox-device')}<a class="button dark prototype-launch" href="AirScout/index.html?preview=dashboard" aria-haspopup="dialog">Open prototype <span>↗</span></a>`;
     lightboxImages.classList.add('is-phone');
   } else if (slide.type === 'workpal') {
     expandedView = document.createElement('div');
@@ -1375,8 +1375,9 @@ function openWorkPalPrototypeOverlay() {
   if (imageLightbox.open) return;
   expandedSlides = [{ type: 'workpal', files: ['overview'], label: 'WorkPal · Interactive prototype' }];
   expandedSlideIndex = 0;
-  document.documentElement.classList.add('workpal-overlay-open');
+  document.documentElement.classList.add('prototype-overlay-open');
   imageLightbox.classList.add('workpal-prototype-overlay');
+  imageLightbox.classList.remove('prototype-app-overlay');
   imageLightbox.classList.remove('has-multiple');
   lightboxThumbnails.replaceChildren();
   document.querySelector('.lightbox-prev').hidden = true;
@@ -1387,13 +1388,41 @@ function openWorkPalPrototypeOverlay() {
   document.querySelector('.lightbox-close').focus();
 }
 
+function openFullPrototypeOverlay(title, src) {
+  if (imageLightbox.open && imageLightbox.classList.contains('prototype-app-overlay')) return;
+  const alreadyOpen = imageLightbox.open;
+  document.documentElement.classList.add('prototype-overlay-open');
+  imageLightbox.classList.add('prototype-app-overlay');
+  imageLightbox.classList.remove('workpal-prototype-overlay', 'has-multiple');
+  lightboxImages.className = 'lightbox-images prototype-app-frame';
+  const frame = document.createElement('iframe');
+  frame.src = src;
+  frame.title = `${title} interactive prototype`;
+  frame.allow = 'fullscreen';
+  lightboxImages.replaceChildren(frame);
+  lightboxTitle.textContent = `${title} · Interactive prototype`;
+  lightboxThumbnails.replaceChildren();
+  lightboxThumbnails.hidden = true;
+  document.querySelector('.lightbox-prev').hidden = true;
+  document.querySelector('.lightbox-next').hidden = true;
+  if (!alreadyOpen) imageLightbox.showModal();
+  document.querySelector('.lightbox-close').focus();
+}
+
 document.addEventListener('click', (event) => {
   const link = event.target.closest('a[href]');
-  if (!link || !/^WorkPal\/index\.html(?:$|[?#])/.test(link.getAttribute('href'))) return;
+  if (!link) return;
+  const path = decodeURIComponent(new URL(link.href, location.href).pathname);
+  let launch;
+  if (path.endsWith('/WorkPal/index.html')) launch = ['workpal'];
+  else if (path.endsWith('/AirScout/index.html')) launch = ['AirScout', new URL('AirScout/index.html?preview=dashboard', location.href).href];
+  else if (path.endsWith('/AI Project Dashboard/dist/index.html')) launch = ['Margin', new URL('AI Project Dashboard/dist/index.html?portfolioPreview=1&previewView=timeline', location.href).href];
+  if (!launch) return;
   event.preventDefault();
-  openWorkPalPrototypeOverlay();
+  if (launch[0] === 'workpal') openWorkPalPrototypeOverlay();
+  else openFullPrototypeOverlay(launch[0], launch[1]);
 });
-imageLightbox.addEventListener('close', () => { imageLightbox.classList.remove('workpal-prototype-overlay'); document.documentElement.classList.remove('workpal-overlay-open'); });
+imageLightbox.addEventListener('close', () => { imageLightbox.classList.remove('workpal-prototype-overlay', 'prototype-app-overlay'); document.documentElement.classList.remove('prototype-overlay-open'); });
 
 function setExpandedSlide(index) {
   if (!expandedSlides.length) return;
