@@ -1602,8 +1602,11 @@ form.addEventListener('submit', (event) => {
   if (!form.reportValidity()) return;
 
   const data = new FormData(form);
-  const subject = `Portfolio inquiry from ${data.get('name')}`;
-  const body = `${data.get('message')}\n\nFrom: ${data.get('name')} (${data.get('email')})`;
+  const subject = window.portfolioLanguage === 'fr'
+    ? `Message au sujet du portfolio de ${data.get('name')}`
+    : `Portfolio inquiry from ${data.get('name')}`;
+  const senderLabel = window.portfolioLanguage === 'fr' ? 'De' : 'From';
+  const body = `${data.get('message')}\n\n${senderLabel}: ${data.get('name')} (${data.get('email')})`;
   const mailto = `mailto:thien.ann.nguyen@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   window.location.href = mailto;
 });

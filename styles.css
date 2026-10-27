@@ -808,8 +808,14 @@ html{scroll-padding-top:calc(var(--topbar-height,76px) + 12px)}
 @media(max-width:650px){.case-dialog #case-content{padding-top:calc(58px + env(safe-area-inset-top,0px))}.case-dialog .case-close{height:calc(58px + env(safe-area-inset-top,0px));font-size:13px}.case-dialog .case-reading-progress{top:0}.case-dialog .case-section-nav{top:3px}}
 /* Balance the header columns so the section links remain centered in the viewport. */
 .topbar{display:grid;grid-template-columns:minmax(0,1fr) max-content minmax(0,1fr);justify-content:initial;gap:24px}
+.top-contacts{display:flex;align-items:center;justify-self:end;gap:14px;min-width:0}
+.language-switch{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;color:#85837b;font:10px var(--mono);letter-spacing:.04em}
+.language-switch button{padding:5px 2px;border:0;background:transparent;color:#77766e;font:inherit;cursor:pointer;transition:color .2s,opacity .2s}
+.language-switch button[aria-pressed="true"]{color:var(--ink);font-weight:700}
+.language-switch button:hover{color:var(--orange)}
+.language-switch button:focus-visible{outline:2px solid var(--orange);outline-offset:3px;border-radius:3px}
 .topbar>.wordmark{justify-self:start}
 .topbar>nav{justify-self:center;min-width:max-content}
 .topbar>.top-contacts{justify-self:end;min-width:0}
-@media(min-width:561px) and (max-width:1100px){.topbar{grid-template-columns:minmax(0,1fr) max-content minmax(0,1fr);gap:12px}.topbar nav{gap:clamp(9px,1.5vw,17px);font-size:11px}.top-contacts a:first-child{display:none}.top-contacts{gap:0;font-size:11px}}
-@media(max-width:560px){.topbar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}.topbar nav{display:none}.top-contacts{width:100%;justify-content:space-between}}
+@media(min-width:561px) and (max-width:1100px){.topbar{grid-template-columns:minmax(0,1fr) max-content minmax(0,1fr);gap:12px}.topbar nav{gap:clamp(9px,1.5vw,17px);font-size:11px}.top-contacts a:first-of-type{display:none}.top-contacts{gap:12px;font-size:11px}}
+@media(max-width:560px){.topbar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}.topbar nav{display:none}.top-contacts{width:100%;justify-content:space-between;gap:10px}.top-contacts a:first-of-type{display:block;max-width:calc(100vw - 205px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.top-contacts a:last-of-type{white-space:nowrap}.language-switch{font-size:10px}}
