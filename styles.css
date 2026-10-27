@@ -818,4 +818,9 @@ html{scroll-padding-top:calc(var(--topbar-height,76px) + 12px)}
 .topbar>nav{justify-self:center;min-width:max-content}
 .topbar>.topbar-tools{justify-self:end;min-width:0}
 @media(min-width:561px) and (max-width:1100px){.topbar{grid-template-columns:minmax(0,1fr) max-content minmax(0,1fr);gap:12px}.topbar nav{gap:clamp(9px,1.5vw,17px);font-size:11px}.top-contacts a:first-child{display:none}.top-contacts{gap:0;font-size:11px}.topbar-tools{gap:12px}}
-@media(max-width:560px){.topbar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}.topbar nav{display:none}.topbar-tools{order:3;width:auto;max-width:calc(100% - 52px);min-width:0;flex:0 1 auto;margin-left:auto;gap:12px}.top-contacts{order:initial;width:auto;max-width:calc(100% - 52px);min-width:0;flex:0 1 auto;margin-left:0;align-items:flex-end;gap:3px;text-align:right;font-size:10px}.top-contacts a{max-width:100%;overflow:hidden;text-overflow:ellipsis}.language-switch{font-size:10px}}
+@media(max-width:560px){.topbar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}.topbar nav{display:none}.topbar-tools{order:3;display:grid;grid-template-columns:max-content minmax(0,1fr);grid-template-rows:auto auto;align-items:center;column-gap:12px;row-gap:0;width:auto;max-width:calc(100% - 52px);min-width:0;flex:0 1 auto;margin-left:auto}.topbar-tools>.language-switch{grid-column:1;grid-row:2;justify-self:start}.topbar-tools>.top-contacts{display:contents}.topbar-tools>.top-contacts a:first-child{grid-column:2;grid-row:1;justify-self:end;max-width:100%;overflow:hidden;text-overflow:ellipsis}.topbar-tools>.top-contacts a:last-child{grid-column:2;grid-row:2;justify-self:end;max-width:100%;overflow:hidden;text-overflow:ellipsis}.topbar-tools .language-switch{font-size:10px}}
+/* Prevent the mobile document from drifting sideways into the page background. */
+html,body{max-width:100%;overflow-x:hidden;overscroll-behavior-x:none}
+@supports(overflow:clip){html,body{overflow-x:clip}}
+.prototype-carousel{max-width:100%;overscroll-behavior-x:contain}
+.category-list{overscroll-behavior-x:contain}
