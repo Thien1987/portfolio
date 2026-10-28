@@ -294,7 +294,7 @@ function MainWorkspace({ onAdd, onAddTask, onOpenProject }: { onAdd: () => void;
       {view === 'timeline' && <div className="timeline-toolbar-options"><TimelineProjectFilter /><label className="timeline-scale-control"><span>Range</span><select value={calendarScale} aria-label="Timeline range" onChange={(event) => setCalendarScale(event.target.value as CalendarScale)}>{(['week', 'day', 'month', 'quarter', 'half-year', 'year'] as CalendarScale[]).map((scale) => <option key={scale} value={scale}>{scale === 'week' ? 'Weekly' : scale === 'day' ? 'Daily' : scale === 'month' ? 'Monthly' : scale === 'quarter' ? 'Quarterly' : scale === 'half-year' ? '6 months' : 'Yearly'}</option>)}</select></label><div className="canvas-legend"><span><i className="legend-task" /> Your plan</span><span><i className="legend-proposal" /> Suggested</span></div></div>}
     </div>
     {content}
-    <div className="empty-tasks-row"><div className="empty-tasks-mark"><Plus size={14} /></div><div><strong>Something missing from this plan?</strong><span>Add a task to make the next step visible.</span></div><Button variant="outline" size="sm" onClick={onAddTask}><Plus size={12} /> Add a task</Button><Button variant="outline" size="sm" onClick={onAdd}>Add a project</Button></div>
+    <div className="empty-tasks-row"><div className="empty-tasks-mark"><Plus size={14} /></div><div><strong>Something missing from this plan?</strong><span>Add a task to make the next step visible.</span></div><Button className="workspace-primary-action" size="default" onClick={onAddTask}><Plus size={15} /> Add a task</Button><Button className="workspace-primary-action" size="default" onClick={onAdd}><Plus size={15} /> Add a project</Button></div>
   </main>
 }
 
