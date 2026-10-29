@@ -1,5 +1,5 @@
 ﻿import { useEffect, useMemo, useState, type FormEvent } from 'react'
-import { ArrowLeft, BookOpen, CalendarDays, Check, CheckCircle2, Circle, Download, ExternalLink, FileText, ImagePlus, Link2, LoaderCircle, Paperclip, Plus, Save, Sparkles, Trash2, Users, X } from 'lucide-react'
+import { AlertTriangle, ArrowLeft, BookOpen, CalendarDays, Check, CheckCircle2, Circle, Download, ExternalLink, FileText, ImagePlus, Link2, LoaderCircle, Paperclip, Plus, Save, Sparkles, Trash2, Users, X } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog'
@@ -39,6 +39,7 @@ function getQuarterOptions(startDate: string) {
 
 export function ProjectEpicPage({ project, onBack, onOpenStory, onDirtyChange }: { project: Project; onBack: () => void; onOpenStory: (taskId: string) => void; onDirtyChange?: (dirty: boolean) => void }) {
   const updateProject = useWorkspace((state) => state.updateProject)
+  const deleteProject = useWorkspace((state) => state.deleteProject)
   const updateTask = useWorkspace((state) => state.updateTask)
   const changeTaskStatus = useWorkspace((state) => state.changeTaskStatus)
   const baseEpic = fallbackEpic(project)
@@ -59,6 +60,8 @@ export function ProjectEpicPage({ project, onBack, onOpenStory, onDirtyChange }:
   const [imageUrls, setImageUrls] = useState<Record<string, string>>({})
   const [savingImages, setSavingImages] = useState(false)
   const [leaveDialogOpen, setLeaveDialogOpen] = useState(false)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deleting, setDeleting] = useState(false)
   const attachments = draft.attachments ?? []
   const attachmentKey = attachments.map((item) => item.id).join('|')
   const isDirty = JSON.stringify(draft) !== JSON.stringify(baseEpic) || JSON.stringify(scheduleDraft) !== JSON.stringify(baseSchedule)
@@ -227,6 +230,15 @@ export function ProjectEpicPage({ project, onBack, onOpenStory, onDirtyChange }:
     await save()
     onBack()
   }
+  const confirmDelete = async () => {
+    if (deleting) return
+    setDeleting(true)
+    const storedAttachments = [...new Map([...(baseEpic.attachments ?? []), ...attachments].map((item) => [item.id, item])).values()]
+    await Promise.allSettled(storedAttachments.filter((item) => item.kind !== 'link').map((item) => deleteEpicAsset(item.id)))
+    deleteProject(project.id)
+    setDeleteDialogOpen(false)
+    onBack()
+  }
 
   const addRequirement = (event: FormEvent) => {
     event.preventDefault()
@@ -337,6 +349,7 @@ export function ProjectEpicPage({ project, onBack, onOpenStory, onDirtyChange }:
             <button type="button" className="epic-attachment-remove" onClick={() => removeAttachment(item)} aria-label={`Remove ${item.name}`} title="Remove attachment"><Trash2 size={13} /></button>
           </article>)}</div> : <div className="epic-attachments-empty">No pictures, documents, or links attached yet.</div>}
           {attachments.length > 0 && <p className="epic-attachment-save-hint">Attachments are linked to {draft.key}. Save changes to confirm edits.</p>}
+          <div className="epic-delete-zone"><div><strong>Delete this epic</strong><span>Remove it and its linked work from this workspace.</span></div><Button type="button" variant="outline" className="epic-delete-trigger" onClick={() => setDeleteDialogOpen(true)}><Trash2 size={14} /> Delete epic</Button></div>
         </section>
       </aside>
     </div>
@@ -353,6 +366,12 @@ export function ProjectEpicPage({ project, onBack, onOpenStory, onDirtyChange }:
       </DialogContent>
     </Dialog>
     <AddStoryDialog project={project} open={addingStory} onOpenChange={setAddingStory} />
+    <Dialog open={deleteDialogOpen} onOpenChange={(open) => { if (!deleting) setDeleteDialogOpen(open) }}>
+      <DialogContent className="modal-card leave-ticket-dialog epic-delete-dialog" showCloseButton={false}>
+        <div className="modal-title"><div className="modal-mark epic-delete-mark"><AlertTriangle size={17} /></div><div><DialogTitle className="modal-heading">Delete this epic?</DialogTitle><DialogDescription className="modal-description">This permanently deletes “{project.name},” including its epic details, {project.tasks.length} linked {project.tasks.length === 1 ? 'story or task' : 'stories and tasks'}, and all attached links and files. It will be removed from the project list and timeline. Unsaved changes will be discarded. This action cannot be undone.</DialogDescription></div><button className="icon-button" onClick={() => setDeleteDialogOpen(false)} aria-label="Keep epic" disabled={deleting}><X size={16} /></button></div>
+        <div className="modal-actions"><Button variant="outline" onClick={() => setDeleteDialogOpen(false)} disabled={deleting}>Keep epic</Button><Button className="epic-delete-confirm-button" onClick={() => void confirmDelete()} disabled={deleting}><Trash2 size={15} />{deleting ? 'Deleting…' : 'Delete epic'}</Button></div>
+      </DialogContent>
+    </Dialog>
     <Dialog open={leaveDialogOpen} onOpenChange={setLeaveDialogOpen}><DialogContent className="modal-card leave-ticket-dialog" showCloseButton={false}><div className="modal-title"><div className="modal-mark leave-ticket-mark"><X size={17} /></div><div><DialogTitle className="modal-heading">Leave without saving?</DialogTitle><DialogDescription className="modal-description">Your unsaved epic changes or unconfirmed AI suggestions will be lost.</DialogDescription></div><button className="icon-button" onClick={() => setLeaveDialogOpen(false)} aria-label="Stay on this ticket"><X size={16} /></button></div><div className="modal-actions"><Button variant="outline" onClick={() => setLeaveDialogOpen(false)}>Stay on ticket</Button><Button variant="destructive" onClick={() => void discardAndLeave()}>Discard changes and leave</Button></div></DialogContent></Dialog>
     {isDirty && <div className="epic-page-bottom-save"><span>Unsaved epic changes</span><Button onClick={() => void saveAndBack()}><Save size={14} /> Save and return</Button></div>}
   </main>

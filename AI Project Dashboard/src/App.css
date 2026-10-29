@@ -733,6 +733,16 @@ button { cursor: pointer; }
 .epic-attachment-remove { position: absolute; top: 5px; right: 5px; display: grid; place-items: center; width: 23px; height: 23px; border: 1px solid #e4e8e2; border-radius: 6px; background: #fff; color: #7e8981; }
 .epic-attachment-remove:hover { border-color: #e0a39c; background: #fff1ef; color: #a6342d; }
 .epic-attachment-save-hint { margin: 8px 0 0; color: #87928a; font-size: 10px; line-height: 1.4; }
+.epic-delete-zone { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; padding-top: 15px; border-top: 1px solid #eadfdd; }
+.epic-delete-zone > div { display: grid; gap: 4px; min-width: 0; }
+.epic-delete-zone strong { color: #793b36; font-size: 12px; font-weight: 650; }
+.epic-delete-zone span { color: #897d7b; font-size: 10px; line-height: 1.45; }
+.epic-delete-trigger { flex: 0 0 auto; min-height: 35px; border-color: #d9a8a2; background: #fff7f5; color: #a33d35; font-size: 11px; font-weight: 650; }
+.epic-delete-trigger:hover { border-color: #c77e76; background: #ffebe8; color: #8f302a; }
+.epic-delete-trigger:focus-visible, .epic-delete-confirm-button:focus-visible { outline: 3px solid #d9a8a2; outline-offset: 2px; }
+.epic-delete-mark { background: #fff0ed; color: #a33d35; }
+.epic-delete-confirm-button { border: 1px solid #ad3c34; background: #ad3c34; color: #fff; }
+.epic-delete-confirm-button:hover { border-color: #922f29; background: #922f29; }
 .epic-document-upload { margin-top: -4px; }.epic-document-attachment { text-decoration: none; }.epic-document-attachment:hover { background: #f6f8f5; }
 .epic-page-bottom-save { position: sticky; bottom: 10px; z-index: 8; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 18px; padding: 10px 12px; border: 1px solid #dfe6df; border-radius: 9px; background: #ffffffed; box-shadow: 0 5px 18px #23362918; color: #59675e; font-size: 12px; }
 .epic-page-footnote { margin: 18px 0 0; color: #89948c; font-size: 11px; }
@@ -1103,6 +1113,9 @@ button { cursor: pointer; }
 .dark .epic-source-panel-heading [data-slot="dialog-description"], .dark .epic-source-panel-note { color: #b7b7b7; }
 .dark .epic-source-material blockquote { border-left-color: #9a94c0; background: #33323b; color: #e1deef; }
 .dark .epic-source-image { border-color: #484848; }
+.dark .epic-delete-zone { border-color: #513e3c; }.dark .epic-delete-zone strong { color: #f0aaa2; }.dark .epic-delete-zone span { color: #baa9a6; }
+.dark .epic-delete-trigger { border-color: #79504b; background: #392a28; color: #ffc0b6; }.dark .epic-delete-trigger:hover { border-color: #a15c54; background: #49302d; color: #ffd4ce; }
+.dark .epic-delete-mark { background: #50302b; color: #ffb4a9; }
 .dark .epic-source-open-original { border-color: #4a4a4a; color: #e0e0e0; }.dark .epic-source-open-original:hover { background: #333; }
 .dark .modal-title h2, .dark .task-modal .modal-heading { color: #eaeaea; }
 .dark .modal-title p, .dark .task-modal .modal-description { color: #bdbdbd; }

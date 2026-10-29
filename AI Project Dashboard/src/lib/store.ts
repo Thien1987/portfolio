@@ -41,6 +41,7 @@ interface WorkspaceState {
   updateTask: (taskId: string, patch: Partial<Project['tasks'][number]>) => void
   deleteTask: (taskId: string) => void
   updateProject: (projectId: string, patch: Partial<Project>) => void
+  deleteProject: (projectId: string) => void
   addTask: (task: Project['tasks'][number]) => void
   acceptSuggestion: (suggestion: Suggestion) => void
   dismissSuggestion: (suggestion: Suggestion) => void
@@ -224,6 +225,21 @@ export const useWorkspace = create<WorkspaceState>()(persist((set) => ({
     const plan = clone(state.plan)
     plan.projects = plan.projects.map((project) => project.id === projectId ? { ...project, ...patch } : project)
     return record(state, `Updated ${plan.projects.find((project) => project.id === projectId)?.name ?? 'a project'}`, plan)
+  }),
+  deleteProject: (projectId) => set((state) => {
+    const project = state.allProjects.find((item) => item.id === projectId) ?? state.plan.projects.find((item) => item.id === projectId)
+    if (!project) return state
+    const withoutProject = (plan: Plan): Plan => ({ ...plan, projects: plan.projects.filter((item) => item.id !== projectId) })
+    const remainingFilter = state.timelineProjectFilter?.filter((id) => id !== projectId)
+    return {
+      plan: withoutProject(state.plan),
+      allProjects: state.allProjects.filter((item) => item.id !== projectId),
+      history: state.history.map(withoutProject),
+      future: state.future.map(withoutProject),
+      historyEntries: [{ label: `Deleted epic: ${project.name}`, at: new Date().toISOString() }, ...state.historyEntries].slice(0, 12),
+      selectedProject: state.selectedProject === projectId ? null : state.selectedProject,
+      timelineProjectFilter: remainingFilter?.length ? remainingFilter : null,
+    }
   }),
   addTask: (task) => set((state) => {
     const plan = clone(state.plan)
