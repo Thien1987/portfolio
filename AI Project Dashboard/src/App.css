@@ -1194,6 +1194,10 @@ button { cursor: pointer; }
 .portfolio-preview .main-workspace,
 .portfolio-preview .insight-panel { height: 100%; min-height: 0; overflow-y: auto; scrollbar-width: thin; }
 .portfolio-preview .app-main > .epic-page:not(.new-project-page) { flex: 1 1 0; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: thin; }
+.portfolio-preview .app-main:has(> .epic-page:not(.new-project-page)) { overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: auto; touch-action: pan-y; -webkit-overflow-scrolling: touch; }
+.portfolio-preview .app-main:has(> .epic-page:not(.new-project-page)) > .topbar { position: sticky; top: 0; z-index: 60; background: var(--background); }
+.portfolio-preview .app-main:has(> .epic-page:not(.new-project-page)) > .epic-page:not(.new-project-page) { flex: 0 0 auto; min-height: max-content; overflow: visible; }
+.portfolio-preview .app-main:has(> .epic-page:not(.new-project-page)) .epic-page-topbar { top: 49px; }
 .portfolio-preview .new-project-page { flex: 1 1 0; min-height: 0; overflow-x: hidden; overflow-y: auto; overscroll-behavior-y: contain; scrollbar-width: thin; }
 .portfolio-preview .canvas-toolbar { padding-bottom: 8px; }
 .portfolio-preview .suggestion-list { max-height: min(34vh, 230px); }
