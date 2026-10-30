@@ -670,7 +670,7 @@ em,.orb-core,.portrait-placeholder{font-style:normal!important}
 .margin-feature .airscout-feature-copy{background:#272b35}
 .margin-feature .airscout-kicker{color:#d1d6e1}
 .margin-feature .airscout-kicker i{background:#c8a8f0;box-shadow:0 0 0 4px #c8a8f022}
-.margin-feature .airscout-feature-art{background:linear-gradient(135deg,#343b4a,#20242c);padding:28px}
+.margin-feature .airscout-feature-art{background:linear-gradient(125deg,rgba(15,27,38,.34),rgba(21,34,45,.16) 55%,rgba(15,27,38,.3)),url('assets/margin-office.jpg') center 48%/cover;padding:28px}
 .margin-feature .airscout-feature-art::before{background:linear-gradient(90deg,rgba(39,43,53,.28),transparent 42%)}
 .margin-feature-device{width:min(100%,560px);height:auto;aspect-ratio:1.49;box-shadow:0 18px 50px #10131b66}
 .margin-feature-device .desktop-display{background:#f7f8f4}
