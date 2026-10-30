@@ -9,7 +9,7 @@
     'Selected work': 'Projets sélectionnés', About: 'À propos', Experience: 'Expérience', 'Contact information': 'Coordonnées',
     'INDEPENDENT DESIGNER · MONTRÉAL, QC': 'DESIGNER INDÉPENDANT · MONTRÉAL, QC',
     'SENIOR PRODUCT DESIGNER · 7 YEARS': 'DESIGNER PRODUIT SENIOR · 7 ANS',
-    'From small startups to large organizations, I bring PMs, engineers, developers, and CEOs into the same conversation to turn complex problems into clear, useful product experiences.': 'Des jeunes pousses aux grandes organisations, je réunis les équipes produit, ingénierie, développement et direction pour transformer des problèmes complexes en expériences claires et utiles.',
+    'From early-stage startups to large enterprises, I connect product, engineering, and leadership to turn complex problems into intuitive, useful product experiences.': 'Des startups aux grandes entreprises, je mets en relation les équipes produit, l’ingénierie et la direction pour transformer des problèmes complexes en expériences produit intuitives et utiles.',
     'Explore my work': 'Découvrir mes projets', 'HOW I MAKE': 'COMMENT JE RENDS', 'COMPLEXITY CLEAR': 'LA COMPLEXITÉ PLUS CLAIRE',
     'Identify the real problem': 'Cerner le vrai problème', 'Make the path clear': 'Clarifier le parcours', 'Move from idea to impact': 'De l’idée à l’impact',
     'MY DESIGN PRACTICE': 'MA PRATIQUE DU DESIGN',
