@@ -1,6 +1,9 @@
 (() => {
   const french = {
     'Choose website language': 'Choisir la langue du site',
+    'Rotating orange and blue particle galaxy with design process steps': 'Galaxie de particules orange et bleues en rotation, accompagnée des étapes du processus de design',
+    'HOW I MAKE COMPLEXITY CLEAR': 'COMMENT JE RENDS LA COMPLEXITÉ PLUS CLAIRE',
+    'A THOUGHT, TAKING SHAPE': 'UNE IDÉE PREND FORME',
     'Interactive design orbit': 'Orbite de design interactive',
     'Professional portrait of Thien Nguyen': 'Portrait professionnel de Thien Nguyen',
     'Selected work': 'Projets sélectionnés', About: 'À propos', Experience: 'Expérience', 'Contact information': 'Coordonnées',

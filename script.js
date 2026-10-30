@@ -24,32 +24,239 @@ if (carePreview && !window.matchMedia('(prefers-reduced-motion: reduce)').matche
 }
 
 const heroArt = document.querySelector('.hero-art');
-const heroFocusCopy = document.querySelector('#hero-focus-copy');
+const galaxyCanvas = heroArt?.querySelector('.hero-galaxy');
+const galaxyContext = galaxyCanvas?.getContext('2d', { alpha: true });
+
+if (heroArt && galaxyCanvas && galaxyContext) {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const random = (min, max) => min + Math.random() * (max - min);
+  const particles = Array.from({ length: 440 }, (_, index) => {
+    const arm = index % 4;
+    const radius = Math.sqrt(Math.random()) * 0.49;
+    const angle = radius * 17 + arm * (Math.PI * 2 / 4) + random(-0.42, 0.42);
+    return {
+      radius,
+      angle,
+      spread: random(0.006, 0.06) * (0.25 + radius),
+      size: random(0.55, 2.0) * (1 - radius * 0.42),
+      phase: random(0, Math.PI * 2),
+      speed: random(0.08, 0.22),
+      color: Math.random() > 0.51 ? [255, 119, 74] : [92, 166, 255],
+      alpha: random(0.35, 0.95)
+    };
+  });
+  const stars = Array.from({ length: 72 }, () => ({ x: Math.random(), y: Math.random(), r: random(0.35, 1.15), a: random(0.12, 0.52), phase: random(0, Math.PI * 2), speed: random(0.08, 0.2) }));
+  const toolPlanets = [
+    { name: 'Codex', color: '#ff9c78', radius: 0.23, angle: 0.1, speed: 0.1 },
+    { name: 'Claude', color: '#e8b48e', radius: 0.27, angle: 1.15, speed: -0.085 },
+    { name: 'ChatGPT', color: '#87d8b2', radius: 0.31, angle: 2.2, speed: 0.075 },
+    { name: 'Cursor', color: '#9fc5ff', radius: 0.35, angle: 3.1, speed: -0.065 },
+    { name: 'Figma', color: '#f39a9a', radius: 0.39, angle: 4.2, speed: 0.055 },
+    { name: 'Glean', color: '#d8c4ff', radius: 0.43, angle: 5.3, speed: -0.048 }
+  ];
+  let width = 0;
+  let height = 0;
+  let pixelRatio = 1;
+  let frame = 0;
+  let time = 2;
+  let visible = true;
+
+  const resizeGalaxy = () => {
+    const rect = heroArt.getBoundingClientRect();
+    pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+    width = Math.max(1, rect.width);
+    height = Math.max(1, rect.height);
+    galaxyCanvas.width = Math.round(width * pixelRatio);
+    galaxyCanvas.height = Math.round(height * pixelRatio);
+    galaxyContext.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    drawGalaxy();
+  };
+
+  const drawGalaxy = () => {
+    if (!width || !height) return;
+    const ctx = galaxyContext;
+    ctx.clearRect(0, 0, width, height);
+    const cx = width * 0.5;
+    const cy = height * 0.49;
+    const scale = Math.min(width, height) * 1.12;
+    const morph = 1;
+    const turn = time * 0.04 + morph * 0.55;
+
+    stars.forEach((star) => {
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(220,232,255,${star.a * (0.82 + Math.sin(time * star.speed + star.phase) * 0.18)})`;
+      ctx.arc(star.x * width, star.y * height, star.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+
+    const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, scale * (0.09 + morph * 0.1));
+    core.addColorStop(0, `rgba(255,227,196,${0.88 - morph * 0.27})`);
+    core.addColorStop(0.12, `rgba(255,143,89,${0.42 - morph * 0.18})`);
+    core.addColorStop(1, 'rgba(255,143,89,0)');
+    ctx.fillStyle = core;
+    ctx.fillRect(0, 0, width, height);
+
+    particles.forEach((particle) => {
+      const orbitAngle = particle.angle + turn + Math.sin(time * particle.speed + particle.phase) * 0.035;
+      const targetRadius = particle.radius * scale;
+      const x = Math.cos(orbitAngle) * targetRadius;
+      const y = Math.sin(orbitAngle) * targetRadius * 0.72;
+      const driftX = Math.cos(particle.phase + time * particle.speed) * particle.spread * scale;
+      const driftY = Math.sin(particle.phase + time * particle.speed * 0.83) * particle.spread * scale;
+      const gather = 0.025 + morph * 0.975;
+      const px = cx + (x + driftX) * gather;
+      const py = cy + (y + driftY) * gather;
+      const [red, green, blue] = particle.color;
+      const alpha = particle.alpha * (0.58 + 0.42 * Math.sin(time * particle.speed + particle.phase) ** 2);
+      const radius = particle.size * (0.38 + morph * 0.62);
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${red},${green},${blue},${alpha})`;
+      ctx.shadowBlur = morph > 0.22 ? radius * 6 : radius * 3;
+      ctx.shadowColor = `rgba(${red},${green},${blue},${alpha})`;
+      ctx.arc(px, py, radius, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.shadowBlur = 0;
+
+    const maxOrbit = Math.min(0.44, (cx - 38) / scale);
+    const orbitRange = maxOrbit - 0.22;
+    toolPlanets.forEach((planet, index) => {
+      const orbit = 0.22 + orbitRange * (index / (toolPlanets.length - 1));
+      const orbitX = orbit * scale;
+      const orbitY = orbitX * 0.72;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, orbitX, orbitY, -0.12, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(200,218,247,0.045)';
+      ctx.lineWidth = 0.7;
+      ctx.stroke();
+
+      const angle = planet.angle + time * planet.speed;
+      const px = cx + Math.cos(angle) * orbitX;
+      const py = cy + Math.sin(angle) * orbitY;
+      ctx.font = '600 9px "DM Sans", Arial, sans-serif';
+      const labelWidth = ctx.measureText(planet.name).width + 22;
+      const labelHeight = 20;
+      const left = px - labelWidth / 2;
+      const top = py - labelHeight / 2;
+      ctx.beginPath();
+      ctx.roundRect(left, top, labelWidth, labelHeight, 10);
+      ctx.fillStyle = 'rgba(7,13,26,0.88)';
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(206,222,244,0.3)';
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(left + 8, py, 2.4, 0, Math.PI * 2);
+      ctx.fillStyle = planet.color;
+      ctx.shadowColor = planet.color;
+      ctx.shadowBlur = 7;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#f2f5fb';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(planet.name, left + 14, py + 0.3);
+    });
+  };
+
+  const animateGalaxy = () => {
+    frame = 0;
+    if (!visible || reducedMotion.matches) return;
+    time += 0.025;
+    drawGalaxy();
+    frame = requestAnimationFrame(animateGalaxy);
+  };
+
+  const visibilityObserver = new IntersectionObserver(([entry]) => {
+    visible = entry.isIntersecting;
+    if (visible && !reducedMotion.matches && !frame) frame = requestAnimationFrame(animateGalaxy);
+    else if (!visible && frame) { cancelAnimationFrame(frame); frame = 0; }
+  }, { threshold: 0.01 });
+  visibilityObserver.observe(heroArt);
+  new ResizeObserver(resizeGalaxy).observe(heroArt);
+  reducedMotion.addEventListener?.('change', () => {
+    if (reducedMotion.matches && frame) { cancelAnimationFrame(frame); frame = 0; }
+    else if (!reducedMotion.matches && visible && !frame) frame = requestAnimationFrame(animateGalaxy);
+  });
+  resizeGalaxy();
+  if (!reducedMotion.matches) frame = requestAnimationFrame(animateGalaxy);
+}
+
 const heroFocusNotes = {
   discovery: 'Start with the people, their context, and what is getting in their way.',
   structure: 'Bring the right information forward and make the next step feel obvious.',
   momentum: 'Turn a shared direction into a useful product, one thoughtful release at a time.'
 };
-
-heroArt?.querySelectorAll('.orbit-topic').forEach((topic) => {
-  topic.addEventListener('click', () => {
+const heroFocusCopy = document.querySelector('#hero-focus-copy');
+heroArt?.querySelectorAll('.orbit-topic').forEach((step) => {
+  step.addEventListener('click', () => {
     heroArt.querySelectorAll('.orbit-topic').forEach((item) => {
-      const active = item === topic;
+      const active = item === step;
       item.classList.toggle('is-active', active);
       item.setAttribute('aria-pressed', String(active));
     });
-    if (heroFocusCopy) heroFocusCopy.textContent = heroFocusNotes[topic.dataset.focus];
+    if (heroFocusCopy) heroFocusCopy.textContent = heroFocusNotes[step.dataset.focus];
   });
 });
 
-if (heroArt && window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  heroArt.addEventListener('pointermove', (event) => {
-    const bounds = heroArt.getBoundingClientRect();
-    const x = (event.clientX - bounds.left) / bounds.width - 0.5;
-    const y = (event.clientY - bounds.top) / bounds.height - 0.5;
-    heroArt.style.transform = `perspective(900px) rotateY(${x * 3}deg) rotateX(${y * -3}deg)`;
+const heroSection = document.querySelector('.hero');
+const heroMotionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+if (heroSection) {
+  let shootingStarTimer = 0;
+  let twinkleTimer = 0;
+  const scheduleShootingStar = (delay = 5000 + Math.random() * 7000) => {
+    window.clearTimeout(shootingStarTimer);
+    if (heroMotionPreference.matches) return;
+    shootingStarTimer = window.setTimeout(() => {
+      const bounds = heroSection.getBoundingClientRect();
+      if (document.visibilityState === 'visible' && bounds.bottom > 0 && bounds.top < window.innerHeight) {
+        const shootingStar = document.createElement('span');
+        shootingStar.className = 'hero-shooting-star';
+        shootingStar.setAttribute('aria-hidden', 'true');
+        shootingStar.style.setProperty('--start-y', `${6 + Math.random() * 46}%`);
+        const travelY = 55 + Math.random() * Math.min(140, bounds.height * 0.2);
+        const travelX = window.innerWidth * 1.24 + 260;
+        shootingStar.style.setProperty('--travel-y', `${travelY}px`);
+        shootingStar.style.setProperty('--shoot-angle', `${Math.atan2(travelY, travelX) * 180 / Math.PI}deg`);
+        heroSection.append(shootingStar);
+        shootingStar.addEventListener('animationend', () => shootingStar.remove(), { once: true });
+      }
+      scheduleShootingStar();
+    }, delay);
+  };
+
+  const scheduleTwinkle = () => {
+    window.clearTimeout(twinkleTimer);
+    if (heroMotionPreference.matches) return;
+    twinkleTimer = window.setTimeout(() => {
+      const bounds = heroSection.getBoundingClientRect();
+      if (document.visibilityState === 'visible' && bounds.bottom > 0 && bounds.top < window.innerHeight) {
+        const twinkle = document.createElement('span');
+        twinkle.className = 'hero-twinkle';
+        twinkle.setAttribute('aria-hidden', 'true');
+        twinkle.style.left = `${38 + Math.random() * 58}%`;
+        twinkle.style.top = `${10 + Math.random() * 78}%`;
+        twinkle.style.animationDuration = `${0.9 + Math.random() * 0.7}s`;
+        heroSection.append(twinkle);
+        twinkle.addEventListener('animationend', () => twinkle.remove(), { once: true });
+      }
+      scheduleTwinkle();
+    }, 1100 + Math.random() * 2400);
+  };
+
+  scheduleShootingStar(2500 + Math.random() * 3500);
+  scheduleTwinkle();
+  heroMotionPreference.addEventListener?.('change', () => {
+    if (heroMotionPreference.matches) {
+      window.clearTimeout(shootingStarTimer);
+      window.clearTimeout(twinkleTimer);
+      heroSection.querySelectorAll('.hero-shooting-star').forEach((star) => star.remove());
+      heroSection.querySelectorAll('.hero-twinkle').forEach((star) => star.remove());
+    } else {
+      scheduleShootingStar(1800 + Math.random() * 2200);
+      scheduleTwinkle();
+    }
   });
-  heroArt.addEventListener('pointerleave', () => { heroArt.style.transform = ''; });
 }
 
 document.getElementById('cursor-hamster')?.remove();
