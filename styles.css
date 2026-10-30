@@ -895,3 +895,7 @@ button:focus-visible,.button:focus-visible,.airscout-feature-link:focus-visible{
 .hero-twinkle::after{width:19px;height:1px;transform:translate(-50%,-50%) rotate(45deg)}
 @keyframes hero-twinkle-shine{0%,100%{opacity:0;transform:scale(.25)}28%{opacity:.9;transform:scale(.8)}52%{opacity:.42;transform:scale(.55)}}
 @media(prefers-reduced-motion:reduce){.hero-twinkle{display:none!important}}
+
+/* Tie the values banner into the same midnight space palette as the hero and career section. */
+.marquee{background-color:#101a2b;background-image:radial-gradient(ellipse at 73% 42%,rgba(45,96,139,.38),transparent 49%),radial-gradient(ellipse at 20% 82%,rgba(91,48,58,.2),transparent 43%),linear-gradient(125deg,#0b1423 0%,#14243a 52%,#0d1727 100%);color:#f4f1ea}
+.marquee b{color:#f08a65}
