@@ -194,3 +194,10 @@ body{font-size:16px;line-height:1.5}.primary-nav button,.primary-button,.seconda
 @media(max-width:520px){.story-tensions{grid-template-columns:1fr 1fr}.story-tensions article{min-height:150px;padding:15px 13px}.story-process article{grid-template-columns:34px minmax(0,1fr);gap:12px;padding:16px}.story-journey{grid-template-columns:1fr;gap:13px}.story-journey article{padding:0 0 13px;border-bottom:1px solid #cfded3}.story-journey article:last-of-type{border:0;padding-bottom:0}.story-reflection .primary-button{width:100%}}
 /* Keep narrow layouts within the phone viewport used by portfolio previews. */
 @media(max-width:740px){html,body{width:100%;max-width:100%;overflow-x:clip}.app-shell,main#app,.view{width:100%;max-width:100%;min-width:0}.view{overflow-x:clip}.view>*{min-width:0;max-width:100%}.app-header-inner,.primary-nav,.header-right{min-width:0;max-width:100%}}
+
+/* Keep the brand, primary navigation, and account controls in distinct header zones. */
+.app-header-inner{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)}
+.brand{justify-self:start}
+.primary-nav{justify-self:center;margin-left:0}
+.header-right{justify-self:end;margin-left:0}
+@media(max-width:740px){.app-header-inner{display:flex}.primary-nav{justify-self:auto;margin-left:0}.header-right{justify-self:auto;margin-left:auto}}
