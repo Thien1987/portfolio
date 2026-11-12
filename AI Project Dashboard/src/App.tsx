@@ -1,6 +1,6 @@
 ﻿import { useEffect, useMemo, useRef, useState } from 'react'
 import { addDays, differenceInCalendarDays, format, parseISO, startOfWeek } from 'date-fns'
-import { Activity, ArrowDownRight, ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, ChevronDown, ChevronRight, CircleHelp, Flag, Gauge, History, Layers3, LayoutGrid, ListTodo, Moon, Plus, RotateCcw, RotateCw, Search, Settings2, ShieldCheck, Sparkles, Sun, Target, User, WandSparkles, X } from 'lucide-react'
+import { Activity, ArrowDownRight, ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, ChevronDown, ChevronLeft, ChevronRight, CircleHelp, Flag, Gauge, History, Layers3, LayoutGrid, ListTodo, Moon, Plus, RotateCcw, RotateCw, Search, Settings2, ShieldCheck, Sparkles, Sun, Target, User, WandSparkles, X } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Slider } from '@/components/ui/slider'
@@ -30,19 +30,20 @@ const views: { id: WorkspaceView; label: string; icon: typeof CalendarDays }[] =
 type TicketNavigation = { kind: 'project'; project: Project; taskId?: string } | { kind: 'workspace'; view: WorkspaceView; allProjects?: boolean } | { kind: 'create' }
 
 function Sidebar({ onAdd, ticketMode = false, onTicketNavigate }: { onAdd: () => void; ticketMode?: boolean; onTicketNavigate?: (destination: TicketNavigation) => void }) {
+  const [collapsed, setCollapsed] = useState(false)
   const { plan, view, setView, selectedProject, selectProject, timelineProjectFilter, setTimelineProjectFilter } = useWorkspace()
   const openTasks = plan.projects.reduce((sum, project) => sum + project.tasks.filter((task) => !isTaskClosed(task.status)).length, 0)
-  return <aside className="app-sidebar">
-    <div className="brand-row"><div className="brand-mark"><Layers3 size={17} /></div><div className="brand-name">margin<span>.</span><small>PROJECT SPACE</small></div></div>
+  return <aside className={`app-sidebar ${collapsed ? 'is-collapsed' : ''}`}>
+    <div className="brand-row"><div className="brand-mark"><Layers3 size={17} /></div><div className="brand-name">margin<span>.</span><small>PROJECT SPACE</small></div><button type="button" className="sidebar-menu" onClick={() => setCollapsed((current) => !current)} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} aria-expanded={!collapsed} title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>{collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}</button></div>
     <WorkspaceDropdown />
     <div className="sidebar-section-label">WORKSPACE</div>
     <nav className="main-nav" aria-label="Workspace views">
-      {views.map(({ id, label, icon: Icon }) => <button key={id} className={`nav-item ${view === id ? 'active' : ''}`} onClick={() => ticketMode ? onTicketNavigate?.({ kind: 'workspace', view: id }) : setView(id)} aria-current={view === id ? 'page' : undefined}><Icon size={16} /><span>{label}</span>{id === 'week' && <small className="nav-count">{openTasks}</small>}</button>)}
+      {views.map(({ id, label, icon: Icon }) => <button key={id} className={`nav-item ${view === id ? 'active' : ''}`} onClick={() => ticketMode ? onTicketNavigate?.({ kind: 'workspace', view: id }) : setView(id)} aria-label={label} title={label} aria-current={view === id ? 'page' : undefined}><Icon size={16} /><span>{label}</span>{id === 'week' && <small className="nav-count">{openTasks}</small>}</button>)}
     </nav>
     <div className="sidebar-project-header"><span className="sidebar-section-label">YOUR PROJECTS</span><button onClick={() => ticketMode ? onTicketNavigate?.({ kind: 'create' }) : onAdd()} className="icon-button tiny" aria-label="Add a project"><Plus size={15} /></button></div>
     <nav className="project-nav" aria-label="Filter by project">
-      <button className={`project-nav-item ${timelineProjectFilter === null ? 'selected' : ''}`} onClick={() => { if (ticketMode) onTicketNavigate?.({ kind: 'workspace', view: 'timeline', allProjects: true }); else { selectProject(null); setTimelineProjectFilter(null); setView('timeline') } }}><span className="all-projects-icon"><Layers3 size={13} /></span><span>All projects</span><small>{plan.projects.length}</small></button>
-      {plan.projects.map((project) => <button key={project.id} className={`project-nav-item ${selectedProject === project.id || timelineProjectFilter?.length === 1 && timelineProjectFilter[0] === project.id ? 'selected' : ''}`} onClick={() => { if (ticketMode) onTicketNavigate?.({ kind: 'project', project }); else { selectProject(project.id); setTimelineProjectFilter([project.id]); setView('timeline') } }}><i className="project-color-dot" style={{ backgroundColor: projectColor[project.color] }} /><span>{project.name}</span>{project.status === 'at-risk' && <i className="sidebar-risk" aria-label="At risk" />}</button>)}
+      <button className={`project-nav-item ${timelineProjectFilter === null ? 'selected' : ''}`} onClick={() => { if (ticketMode) onTicketNavigate?.({ kind: 'workspace', view: 'timeline', allProjects: true }); else { selectProject(null); setTimelineProjectFilter(null); setView('timeline') } }} aria-label="All projects" title="All projects"><span className="all-projects-icon"><Layers3 size={13} /></span><span>All projects</span><small>{plan.projects.length}</small></button>
+      {plan.projects.map((project) => <button key={project.id} className={`project-nav-item ${selectedProject === project.id || timelineProjectFilter?.length === 1 && timelineProjectFilter[0] === project.id ? 'selected' : ''}`} onClick={() => { if (ticketMode) onTicketNavigate?.({ kind: 'project', project }); else { selectProject(project.id); setTimelineProjectFilter([project.id]); setView('timeline') } }} aria-label={project.status === 'at-risk' ? `${project.name}, at risk` : project.name} title={project.name}><i className="project-color-dot" style={{ backgroundColor: projectColor[project.color] }} /><span>{project.name}</span>{project.status === 'at-risk' && <i className="sidebar-risk" aria-label="At risk" />}</button>)}
     </nav>
     <div className="sidebar-footer"><div className="sidebar-week"><div className="mini-calendar"><CalendarDays size={15} /></div><div><strong>{format(new Date(), 'MMMM yyyy')}</strong><small>{openTasks} open tasks across your plan</small></div></div><div className="profile-row"><div className="profile-avatar">TN</div><div><strong>Thien Nguyen</strong><small>Designer</small></div></div></div>
   </aside>

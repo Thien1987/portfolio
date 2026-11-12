@@ -200,4 +200,5 @@ body{font-size:16px;line-height:1.5}.primary-nav button,.primary-button,.seconda
 .brand{justify-self:start}
 .primary-nav{justify-self:center;margin-left:0}
 .header-right{justify-self:end;margin-left:0}
+@media(min-width:741px){.app-header{padding-inline:clamp(24px,3.3vw,48px)}.app-header-inner{width:100%;max-width:none;padding-inline:0}}
 @media(max-width:740px){.app-header-inner{display:flex}.primary-nav{justify-self:auto;margin-left:0}.header-right{justify-self:auto;margin-left:auto}}
